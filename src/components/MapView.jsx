@@ -39,7 +39,7 @@ export default function MapView({ userLocation, results, route, radius, flyToPos
         </Marker>
       ))}
 
-      {route && <Polyline positions={route.map(([lat, lng]) => [lat, lng])} color="green" />}
+      {route && <Polyline positions={route.map(([lat, lng]) => [lat, lng])} color="blue" />}
       
       <FlyToMarker position={flyToPosition} />
     </MapContainer>

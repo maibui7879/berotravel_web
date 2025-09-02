@@ -25,7 +25,7 @@ export default function SearchBar({ onSearch }) {
         />
         <button
           onClick={handleSearch}
-          className="absolute right-2 text-white bg-blue-500 hover:bg-blue-600 p-2 rounded-xl"
+          className="absolute right-2 text-blue-500 hover:text-blue-600 p-2 rounded-xl focus:outline-none"
         >
           <FaSearch />
         </button>

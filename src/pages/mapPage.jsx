@@ -17,6 +17,7 @@ export default function MapPage() {
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
   const [directionsDestination, setDirectionsDestination] = useState(null);
   const [durationText, setDurationText] = useState("");
+  const [drawerOpen, setDrawerOpen] = useState(true);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -57,6 +58,7 @@ export default function MapPage() {
       const durationSec = res.data.features[0].properties.segments[0].duration;
       const mins = Math.round(durationSec / 60);
       setDurationText(`${mins} phút`);
+      setDrawerOpen(true);
     } catch (err) {
       console.error(err);
       alert("Không thể lấy đường đi thực tế");
@@ -80,7 +82,6 @@ export default function MapPage() {
     setCurrentStepIndex(null);
   };
 
-  // Giám sát người dùng để highlight step hiện tại
   useEffect(() => {
     if (!steps || steps.length === 0) return;
     const watchId = navigator.geolocation.watchPosition(
@@ -90,7 +91,7 @@ export default function MapPage() {
           const [lat, lng] = step.geometry?.coordinates?.[0] || [step.start_location?.lat, step.start_location?.lng];
           const dLat = latitude - lat;
           const dLng = longitude - lng;
-          const distance = Math.sqrt(dLat * dLat + dLng * dLng) * 111000; // approx meters
+          const distance = Math.sqrt(dLat * dLat + dLng * dLng) * 111000;
           return distance < 20;
         });
         if (idx !== -1) setCurrentStepIndex(idx);
@@ -104,46 +105,65 @@ export default function MapPage() {
   if (!userLocation) return <div>Đang lấy vị trí...</div>;
 
   return (
-    <div className="flex h-screen w-screen">
-      <div className="w-3/4 h-full">
-        <MapView
-          userLocation={userLocation}
-          results={results}
-          route={route}
-          radius={radius}
-          flyToPosition={flyToPosition}
-          steps={steps}
-        />
-      </div>
+    <div className="relative h-screen w-screen overflow-x-hidden">
+      <MapView
+        userLocation={userLocation}
+        results={results}
+        route={route}
+        radius={radius}
+        flyToPosition={flyToPosition}
+        steps={steps}
+      />
 
-      <div className="w-1/4 h-full rounded-xl bg-gray-200 shadow-xl flex flex-col">
-        <div className="p-4">
-          {!steps.length ? (
-            <SearchBar onSearch={handleSearch} />
-          ) : null}
-        </div>
+      {drawerOpen && (
+        <div className="absolute top-0 right-0 h-full w-80 bg-gray-200 shadow-2xl z-[9999] rounded-l-xl flex flex-col">
+          {/* handle ngoài cạnh */}
+          <button
+            className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 bg-gray-500 text-white rounded-l-full px-2 py-6 shadow-lg hover:bg-gray-600"
+            onClick={() => setDrawerOpen(false)}
+          >
+            ›
+          </button>
 
-        <div className="flex-1 p-4 overflow-auto scrollbar-hide">
-          {!steps.length ? (
-            <ResultList
-              results={results}
-              onDirections={handleDirections}
-              onDetail={handleDetail}
-              onSelectPlace={handleSelectPlace}
-              loadingDirections={loadingDirections}
-              userLocation={userLocation}
-            />
-          ) : (
-            <DirectionsStep
-              steps={steps}
-              exitDirections={exitDirections}
-              destinationName={directionsDestination}
-              duration={durationText}
-              currentStepIndex={currentStepIndex}
-            />
-          )}
+          <div className="p-4">
+            {!steps.length ? (
+              <SearchBar onSearch={handleSearch} />
+            ) : (
+              <h2 className="font-semibold text-lg"></h2>
+            )}
+          </div>
+
+          <div className="flex-1 p-4 overflow-auto scrollbar-hide">
+            {!steps.length ? (
+              <ResultList
+                results={results}
+                onDirections={handleDirections}
+                onDetail={handleDetail}
+                onSelectPlace={handleSelectPlace}
+                loadingDirections={loadingDirections}
+                userLocation={userLocation}
+              />
+            ) : (
+              <DirectionsStep
+                steps={steps}
+                exitDirections={exitDirections}
+                destinationName={directionsDestination}
+                duration={durationText}
+                currentStepIndex={currentStepIndex}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
+      {!drawerOpen && (
+        <button
+          className="absolute top-1/2 right-0 -translate-y-1/2 bg-gray-500 text-white rounded-l-full px-2 py-6 shadow-lg hover:bg-gray-600 z-[9999]"
+          onClick={() => setDrawerOpen(true)}
+        >
+          ‹
+        </button>
+      )}
     </div>
   );
 }
