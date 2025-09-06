@@ -1,6 +1,10 @@
+// src/components/ResultList.jsx
 import { FaRoute, FaInfoCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-function PlaceCard({ place, userLocation, onDirections, onDetail, onSelectPlace, loadingDirections }) {
+function PlaceCard({ place, userLocation, onDirections, onSelectPlace, loadingDirections }) {
+  const navigate = useNavigate();
+
   const getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
     const R = 6371;
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -65,7 +69,9 @@ function PlaceCard({ place, userLocation, onDirections, onDetail, onSelectPlace,
               ></path>
             </svg>
           ) : (
-            <><FaRoute /> Chỉ đường</>
+            <>
+              <FaRoute /> Chỉ đường
+            </>
           )}
         </button>
 
@@ -74,7 +80,7 @@ function PlaceCard({ place, userLocation, onDirections, onDetail, onSelectPlace,
           disabled={loadingDirections}
           onClick={(e) => {
             e.stopPropagation();
-            onDetail(place);
+            navigate(`/place/${place._id}`);
           }}
           className={`flex-1 border border-blue-500 text-blue-500 py-2 rounded-xl hover:bg-blue-500 hover:text-white justify-center flex items-center gap-2 transition text-sm ${
             loadingDirections ? "opacity-50 cursor-not-allowed" : ""
@@ -90,7 +96,6 @@ function PlaceCard({ place, userLocation, onDirections, onDetail, onSelectPlace,
 export default function ResultList({
   results,
   onDirections,
-  onDetail,
   onSelectPlace,
   loadingDirections,
   userLocation,
@@ -107,7 +112,6 @@ export default function ResultList({
           place={place}
           userLocation={userLocation}
           onDirections={onDirections}
-          onDetail={onDetail}
           onSelectPlace={onSelectPlace}
           loadingDirections={loadingDirections}
         />

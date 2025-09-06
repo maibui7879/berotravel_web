@@ -14,7 +14,7 @@ function FlyToMarker({ position }) {
 
 export default function MapView({ userLocation, results, route, radius, flyToPosition, onMarkerClick }) {
   return (
-    <MapContainer center={[userLocation.lat, userLocation.lng]} zoom={14} className="h-full w-full">
+    <MapContainer center={[userLocation.lat, userLocation.lng]} zoom={14} className="h-full w-full" zoomControl={false}>
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
       <Marker position={[userLocation.lat, userLocation.lng]}>
