@@ -17,6 +17,6 @@ export const updatePlace = async (id, placeData) => {
 };
 
 export const updatePlaceImages = async (id, imageData) => {
-  const res = await API.put(`/api/places/images/${id}`, imageData);
+  const res = await API.put(`/places/images/${id}`, imageData);
   return res.data;
 };

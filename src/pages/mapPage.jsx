@@ -42,7 +42,7 @@ export default function MapPage() {
   const handleDirections = async (place) => {
     if (!userLocation) return;
     setLoadingDirections(true);
-    const API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjVlMjMxNjJjNGViMTQyZjc4ZjlmMzk5YzRkNTIxM2FmIiwiaCI6Im11cm11cjY0In0=";
+    const API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjVlMjMxNjJjNGViMTQyZjc4ZjlmMzk5YzRkNTIxM2FmIiwiaCI6Im11cm11cjY0In0=";    
     const start = `${userLocation.lng},${userLocation.lat}`;
     const end = `${place.longitude},${place.latitude}`;
     try {
@@ -117,7 +117,6 @@ export default function MapPage() {
 
       {drawerOpen && (
         <div className="absolute top-0 right-0 h-full w-80 bg-gray-200 shadow-2xl z-[9999] rounded-l-xl flex flex-col">
-          {/* handle ngoài cạnh */}
           <button
             className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 bg-gray-500 text-white rounded-l-full px-2 py-6 shadow-lg hover:bg-gray-600"
             onClick={() => setDrawerOpen(false)}

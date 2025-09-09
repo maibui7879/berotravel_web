@@ -76,7 +76,7 @@ export default function SearchBar({ onSearch }) {
             <input
               type="number"
               value={radius}
-              onChange={(e) => setRadius(e.target.value)}
+              onChange={(e) => setRadius(Number(e.target.value))}
               className="border rounded-xl p-2 w-20 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             <span>km</span>

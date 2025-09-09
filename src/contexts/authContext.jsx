@@ -1,8 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { registerUser } from "../userServices/registerService";
-import { loginUser } from "../userServices/loginService";
-import { getProfile } from "../userServices/profileService";
-import { logoutUser } from "../userServices/logoutService";
+import { registerUser } from "../services/userServices/registerServices";
+import { loginUser } from "../services/userServices/loginServices";
+import { getProfile } from "../services/userServices/profileServices";
 
 const AuthContext = createContext();
 
@@ -30,7 +29,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    logoutUser();
+    localStorage.removeItem("token");
+    delete window.localStorage.token;
     setUser(null);
   };
 
@@ -46,3 +46,4 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+export default AuthContext; 
