@@ -72,7 +72,7 @@ export default function PlaceDetail() {
         place={place}/>
       </div>
       <div className="mt-6 px-6">
-        <CommentSection placeId={id} />
+        <CommentSection placeId={id} place={place} />
       </div>
       {showModal && (
         <EditImageModal

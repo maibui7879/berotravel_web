@@ -3,33 +3,40 @@ import { FaStar } from "react-icons/fa";
 import { useAuth } from "../../../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 import { createReview, getRatingSummary } from "../../../services/reviewServices/reviewServices";
+import { toast } from "react-toastify";
 
 export default function RatingCard({ ratingSummary, setRatingSummary, placeId }) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [hover, setHover] = useState(null);
   const [rating, setRating] = useState(0);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleRating = async (value) => {
     if (!user) {
-      setShowLoginModal(true);
-      setTimeout(() => {
-        setShowLoginModal(false);
-        navigate("/auth");
-      }, 1000);
+      toast.info("Bạn cần đăng nhập để đánh giá");
+      setTimeout(() => navigate("/auth"), 1000);
       return;
     }
+
     try {
       setRating(value);
+      setLoading(true);
+
+      // Gửi rating
       await createReview(placeId, { rating: value, comment: "" });
-      setShowSuccessModal(true);
-      const updatedSummary = await getRatingSummary(placeId);
-      setRatingSummary(updatedSummary);
-      setTimeout(() => setShowSuccessModal(false), 1200);
+
+      // Delay 1s trước khi cập nhật summary và hiện toast
+      setTimeout(async () => {
+        const updatedSummary = await getRatingSummary(placeId);
+        setRatingSummary(updatedSummary);
+        setLoading(false);
+        toast.success("Đánh giá thành công!");
+      }, 1000);
     } catch (err) {
+      setLoading(false);
       console.error("Lỗi khi gửi đánh giá:", err);
+      toast.error("Đánh giá thất bại!");
     }
   };
 
@@ -73,21 +80,10 @@ export default function RatingCard({ ratingSummary, setRatingSummary, placeId })
         <p className="text-sm text-gray-500 mt-1">Hiện chưa có ai đánh giá</p>
       )}
 
-      {/* Modal login full màn hình */}
-      {showLoginModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-          <div className="bg-white px-8 py-4 rounded-lg shadow-lg text-lg font-medium text-gray-700">
-            Bạn cần đăng nhập để đánh giá
-          </div>
-        </div>
-      )}
-
-      {/* Modal success full màn hình */}
-      {showSuccessModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
-          <div className="bg-white px-8 py-4 rounded-lg shadow-lg text-lg font-bold text-green-600">
-            Đánh giá thành công!
-          </div>
+      {/* Overlay loading */}
+      {loading && (
+        <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center rounded-xl z-40">
+          <div className="loader border-4 border-t-4 border-gray-200 border-t-green-500 rounded-full w-12 h-12 animate-spin"></div>
         </div>
       )}
     </div>

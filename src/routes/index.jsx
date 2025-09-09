@@ -14,10 +14,26 @@ import ProfilePage from "../pages/ProfilePage";
 import { MapProvider } from "../contexts/mapContext";
 import { AuthProvider } from "../contexts/authContext";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function AppRoutes() {
   return (
     <Router>
       <AuthProvider>
+        {/* Toast container chung cho toàn app */}
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+
         <Routes>
           {/* Public routes */}
           <Route
