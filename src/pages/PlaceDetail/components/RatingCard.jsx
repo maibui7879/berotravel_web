@@ -23,10 +23,8 @@ export default function RatingCard({ ratingSummary, setRatingSummary, placeId })
       setRating(value);
       setLoading(true);
 
-      // Gửi rating
       await createReview(placeId, { rating: value, comment: "" });
 
-      // Delay 1s trước khi cập nhật summary và hiện toast
       setTimeout(async () => {
         const updatedSummary = await getRatingSummary(placeId);
         setRatingSummary(updatedSummary);
@@ -41,10 +39,11 @@ export default function RatingCard({ ratingSummary, setRatingSummary, placeId })
   };
 
   const displayRating = hover || ratingSummary?.average || 0;
+  const totalVotes = ratingSummary?.totalVotes || 0;
+  const distribution = ratingSummary?.distribution || {};
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 w-1/3 text-center relative">
-      {/* Title */}
       <h3 className="text-xl font-semibold mb-3 text-gray-800">Đánh giá</h3>
 
       {/* Rating number + stars */}
@@ -72,12 +71,40 @@ export default function RatingCard({ ratingSummary, setRatingSummary, placeId })
       </div>
 
       {/* Total votes */}
-      {ratingSummary && ratingSummary.totalVotes > 0 ? (
-        <p className="text-sm text-gray-500 mt-1">
-          {ratingSummary.totalVotes} lượt đánh giá
-        </p>
+      {totalVotes > 0 ? (
+        <p className="text-sm text-gray-500 mt-1">{totalVotes} lượt đánh giá</p>
       ) : (
         <p className="text-sm text-gray-500 mt-1">Hiện chưa có ai đánh giá</p>
+      )}
+
+      {/* Distribution */}
+      {totalVotes > 0 && (
+        <div className="mt-4 space-y-2 ">
+          {[5, 4, 3, 2, 1].map((star) => {
+            const count = distribution[star] || 0;
+            const percent = totalVotes ? (count / totalVotes) * 100 : 0;
+            return (
+              <div key={star} className="flex items-center gap-2 ">
+                <span className="w-4 text-sm font-medium text-gray-700">{star}</span>
+                <FaStar className="text-yellow-400" size={14} />
+                <div className="flex-1 relative group">
+                  <div className="h-1 bg-gray-200 rounded-full overflow-hidden w-3/4">
+                    <div
+                      className="h-full bg-blue-500 rounded-full"
+                      style={{ width: `${percent}%` }}
+                    ></div>
+                  </div>
+                  {/* Tooltip */}
+                  {count > 0 && (
+                    <div className="absolute left-1/2 -translate-x-1/2 -top-7 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition">
+                      {count} lượt
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       )}
 
       {/* Overlay loading */}

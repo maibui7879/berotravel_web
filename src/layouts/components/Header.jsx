@@ -1,24 +1,45 @@
+// src/layouts/components/Header.jsx
 import { useEffect, useState } from "react";
 import { FaHome, FaListAlt, FaMapMarkerAlt, FaUser } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 
 export default function Header() {
   const location = useLocation();
-  const [transparent, setTransparent] = useState(false);
+  const [transparent, setTransparent] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
+      let scrolled = false;
+
+      if (window.scrollY > 0) scrolled = true;
+      if (document.body.scrollTop > 0) scrolled = true;
+      if (document.documentElement.scrollTop > 0) scrolled = true;
+
+      document.querySelectorAll("*").forEach((el) => {
+        if (el.scrollTop > 0) scrolled = true;
+      });
+
+      console.log("[Header][DEBUG] pathname:", location.pathname, "scrolled:", scrolled);
+
       if (location.pathname.startsWith("/place/")) {
-        // slider cao khoảng 500px
-        setTransparent(window.scrollY < 500);
+        setTransparent(!scrolled);
       } else {
         setTransparent(false);
       }
     };
 
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    const observer = new MutationObserver(() => handleScroll());
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    const interval = setInterval(handleScroll, 500);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
+      clearInterval(interval);
+    };
   }, [location.pathname]);
 
   return (

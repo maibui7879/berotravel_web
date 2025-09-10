@@ -20,12 +20,18 @@ export default function MapPage() {
   const [drawerOpen, setDrawerOpen] = useState(true);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) =>
-        setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        if (pos.coords.accuracy < 200) {
+          setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        } else {
+          console.warn("Bỏ qua vị trí do độ chính xác thấp:", pos.coords);
+        }
+      },
       (err) => console.error(err),
-      { enableHighAccuracy: true }
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 30000 }
     );
+    return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
   const handleSearch = async ({ name, category, radius }) => {
@@ -42,14 +48,15 @@ export default function MapPage() {
   const handleDirections = async (place) => {
     if (!userLocation) return;
     setLoadingDirections(true);
-    const API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjVlMjMxNjJjNGViMTQyZjc4ZjlmMzk5YzRkNTIxM2FmIiwiaCI6Im11cm11cjY0In0=";    
+    const API_KEY =
+      "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjVlMjMxNjJjNGViMTQyZjc4ZjlmMzk5YzRkNTIxM2FmIiwiaCI6Im11cm11cjY0In0=";
     const start = `${userLocation.lng},${userLocation.lat}`;
     const end = `${place.longitude},${place.latitude}`;
     try {
-      const res = await axios.get(
-        "https://api.openrouteservice.org/v2/directions/driving-car",
-        { params: { start, end }, headers: { Authorization: API_KEY } }
-      );
+      const res = await axios.get("https://api.openrouteservice.org/v2/directions/driving-car", {
+        params: { start, end },
+        headers: { Authorization: API_KEY },
+      });
       const coordinates = res.data.features[0].geometry.coordinates.map(([lng, lat]) => [lat, lng]);
       setRoute(coordinates);
       setSteps(res.data.features[0].properties.segments[0].steps);
@@ -88,7 +95,8 @@ export default function MapPage() {
       (pos) => {
         const { latitude, longitude } = pos.coords;
         const idx = steps.findIndex((step) => {
-          const [lat, lng] = step.geometry?.coordinates?.[0] || [step.start_location?.lat, step.start_location?.lng];
+          const [lat, lng] =
+            step.geometry?.coordinates?.[0] || [step.start_location?.lat, step.start_location?.lng];
           const dLat = latitude - lat;
           const dLng = longitude - lng;
           const distance = Math.sqrt(dLat * dLat + dLng * dLng) * 111000;
@@ -97,12 +105,20 @@ export default function MapPage() {
         if (idx !== -1) setCurrentStepIndex(idx);
       },
       (err) => console.error(err),
-      { enableHighAccuracy: true, maximumAge: 1000 }
+      { enableHighAccuracy: true, maximumAge: 0 }
     );
     return () => navigator.geolocation.clearWatch(watchId);
   }, [steps]);
 
-  if (!userLocation) return <div>Đang lấy vị trí...</div>;
+  if (!userLocation)
+  return (
+    <div className="flex items-center justify-center h-screen w-screen bg-gray-100">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-gray-700 font-medium">Đang lấy vị trí...</p>
+      </div>
+    </div>
+  );
 
   return (
     <div className="relative h-screen w-screen overflow-x-hidden">
@@ -125,11 +141,7 @@ export default function MapPage() {
           </button>
 
           <div className="p-4">
-            {!steps.length ? (
-              <SearchBar onSearch={handleSearch} />
-            ) : (
-              <h2 className="font-semibold text-lg"></h2>
-            )}
+            {!steps.length ? <SearchBar onSearch={handleSearch} /> : <h2 className="font-semibold text-lg"></h2>}
           </div>
 
           <div className="flex-1 p-4 overflow-auto scrollbar-hide">

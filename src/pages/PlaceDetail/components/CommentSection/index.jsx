@@ -5,7 +5,7 @@ import { getReviews, createReview, updateReview, deleteReview } from "../../../.
 import { getUserById } from "../../../../services/userServices/getUserByID";
 import ReviewCard from "./ReviewCard";
 import CommentForm from "./CommentForm";
-
+import { toast } from "react-toastify";
 export default function CommentSection({ placeId, place }) {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -118,7 +118,15 @@ export default function CommentSection({ placeId, place }) {
           Xem bình luận
         </button>
         <button
-          onClick={() => setActiveTab("write")}
+          onClick={() => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+              toast.error("Bạn cần đăng nhập để bình luận");
+              navigate("/auth");
+              return;
+            }
+            setActiveTab("write");
+          }}
           className={`px-4 py-2 font-medium transition-colors duration-200 bg-transparent ${
             activeTab === "write" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
           }`}
@@ -136,7 +144,7 @@ export default function CommentSection({ placeId, place }) {
             ) : reviews.length === 0 ? (
               <p>Chưa có bình luận nào.</p>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {reviews.map((r) => (
                   <ReviewCard
                     key={r._id}

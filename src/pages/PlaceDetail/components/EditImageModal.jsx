@@ -1,6 +1,6 @@
 import { FaPlus } from "react-icons/fa";
 import { updatePlaceImages } from "../../../services/placeServices/updatePlace";
-
+import { uploadImage } from "../../../services/placeServices/cloudinaryServices";
 export default function EditImageModal({ place, setPlace, setShowModal, updating, setUpdating, id }) {
   const handleUpload = async (index, isMain) => {
     const input = document.createElement("input");
