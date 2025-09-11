@@ -1,3 +1,4 @@
+// src/pages/place/PlaceDetail.jsx
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPlaceById } from "../../services/placeServices/getPlace";
@@ -9,7 +10,6 @@ import RatingCard from "./components/RatingCard";
 import FavoriteCard from "./components/FavoriteCard";
 import EditImageModal from "./components/EditImageModal";
 import CommentSection from "./components/CommentSection";
-import { useHeader } from "../../contexts/headerContext";
 
 export default function PlaceDetail() {
   const { id } = useParams();
@@ -19,7 +19,6 @@ export default function PlaceDetail() {
   const [updating, setUpdating] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [ratingSummary, setRatingSummary] = useState(null);
-  const { setTransparent } = useHeader();
 
   useEffect(() => {
     const fetchPlace = async () => {
@@ -56,50 +55,35 @@ export default function PlaceDetail() {
     fetchRating();
   }, [id]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      console.log("[PlaceDetail][DEBUG] scrollY:", window.scrollY);
-      setTransparent(window.scrollY < 50);
-    };
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [setTransparent]);
-
   if (loading) return <div className="p-4">Loading...</div>;
   if (!place) return <div className="p-4">Place not found</div>;
 
   return (
-    <div className="w-full relative pb-8">
-      <Slider place={place} currentSlide={currentSlide} />
+    <div className="w-full absolute pb-8 -top-80 bg-gray-200">
+        <Slider place={place} currentSlide={currentSlide} />
       <Thumbnail place={place} setShowModal={setShowModal} />
-      <div className="w-full md:w-3/4 mx-auto">
-      <Info place={place} />
-      <div className="flex justify-center">
-        <FavoriteCard place={place} />
+      <div className="w-full md:w-3/4 mx-auto px-2 ">
+        <Info place={place} />
+        <div className="flex justify-center">
+          <FavoriteCard place={place} />
+        </div>
+        <div className="mt-6 flex justify-center gap-4">
+          <RatingCard ratingSummary={ratingSummary} setRatingSummary={setRatingSummary} placeId={id} />
+        </div>
+        <div className="mt-6 px-6">
+          <CommentSection placeId={id} place={place} />
+        </div>
+        {showModal && (
+          <EditImageModal
+            place={place}
+            setPlace={setPlace}
+            setShowModal={setShowModal}
+            updating={updating}
+            setUpdating={setUpdating}
+            id={id}
+          />
+        )}
       </div>
-      <div className="mt-6 flex justify-center gap-4">
-        <RatingCard 
-          ratingSummary={ratingSummary} 
-          setRatingSummary={setRatingSummary}
-          placeId={id} 
-        />
-        
-      </div>
-      <div className="mt-6 px-6">
-        <CommentSection placeId={id} place={place} />
-      </div>
-      {showModal && (
-        <EditImageModal
-          place={place}
-          setPlace={setPlace}
-          setShowModal={setShowModal}
-          updating={updating}
-          setUpdating={setUpdating}
-          id={id}
-        />
-      )}
-    </div>
     </div>
   );
 }

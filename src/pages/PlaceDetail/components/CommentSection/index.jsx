@@ -6,17 +6,18 @@ import { getUserById } from "../../../../services/userServices/getUserByID";
 import ReviewCard from "./ReviewCard";
 import CommentForm from "./CommentForm";
 import { toast } from "react-toastify";
+
 export default function CommentSection({ placeId, place }) {
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const [reviews, setReviews] = useState([]);
   const [comment, setComment] = useState("");
-  const [rating, setRating] = useState(0); // <- mặc định 0
+  const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [activeTab, setActiveTab] = useState("view"); // "view" | "write"
+  const [activeTab, setActiveTab] = useState("view");
 
   const userCache = {};
 
@@ -76,7 +77,7 @@ export default function CommentSection({ placeId, place }) {
     try {
       await createReview(placeId, { rating, comment });
       setComment("");
-      setRating(0); // <- reset về 0
+      setRating(0);
       fetchReviews();
       setActiveTab("view");
     } catch (err) {
@@ -104,16 +105,18 @@ export default function CommentSection({ placeId, place }) {
     }
   };
 
+  const handleVoteChange = (reviewId, newVotes) => {
+    setReviews(prev =>
+      prev.map(r => r._id === reviewId ? { ...r, voteCounts: newVotes } : r)
+    );
+  };
+
   return (
     <div className="p-6 mt-6 w-full">
-
-      {/* Tabs */}
       <div className="flex border-b border-gray-300 mb-6">
         <button
           onClick={() => setActiveTab("view")}
-          className={`px-4 py-2 font-medium transition-colors duration-200 bg-transparent ${
-            activeTab === "view" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
-          }`}
+          className={`px-4 py-2 font-medium transition-colors duration-200 bg-transparent ${activeTab === "view" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
         >
           Xem bình luận
         </button>
@@ -127,15 +130,12 @@ export default function CommentSection({ placeId, place }) {
             }
             setActiveTab("write");
           }}
-          className={`px-4 py-2 font-medium transition-colors duration-200 bg-transparent ${
-            activeTab === "write" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
-          }`}
+          className={`px-4 py-2 font-medium transition-colors duration-200 bg-transparent ${activeTab === "write" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
         >
           Viết bình luận
         </button>
       </div>
 
-      {/* Tab content */}
       <div className="relative min-h-[300px]">
         {activeTab === "view" && (
           <>
@@ -152,6 +152,7 @@ export default function CommentSection({ placeId, place }) {
                     currentUserId={user?._id}
                     onDelete={handleDelete}
                     onSave={handleSaveEdit}
+                    onVoteChange={handleVoteChange}
                   />
                 ))}
               </div>
@@ -169,7 +170,7 @@ export default function CommentSection({ placeId, place }) {
             setHover={setHover}
             onSubmit={handleAddComment}
             currentUser={user}
-            place={place} // truyền place chuẩn
+            place={place}
           />
         )}
       </div>
