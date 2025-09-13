@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../../../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 import { getReviews, createReview, updateReview, deleteReview } from "../../../../services/reviewServices/reviewServices";
-import { getUserById } from "../../../../services/userServices/getUserByID";
+import { getUserById } from "../../../../services/userServices/getUserById";
 import ReviewCard from "./ReviewCard";
 import CommentForm from "./CommentForm";
 import { toast } from "react-toastify";
