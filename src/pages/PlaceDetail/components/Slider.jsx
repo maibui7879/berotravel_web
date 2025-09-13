@@ -1,7 +1,5 @@
-import placeholder from "../../../assets/placeholder.png"
-
 export default function Slider({ place, currentSlide }) {
-  const slides = place.img_set && place.img_set.length > 0 ? place.img_set : [placeholder];
+  const slides = place.img_set && place.img_set.length > 0 ? place.img_set : ["/placeholder.png"];
 
   return (
     <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden">

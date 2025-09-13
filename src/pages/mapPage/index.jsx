@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import MapView from "../components/MapView";
-import SearchBar from "../components/SearchBar";
-import ResultList from "../components/ResultList";
-import DirectionsStep from "../components/DirectionsStep";
-import { searchNearby } from "../services/placeServices/searchPlace";
+import MapView from "./components/MapView";
+import Sidebar from "./components/Sidebar";
+import { searchNearby } from "../../services/placeServices/searchPlace";
 import axios from "axios";
 
 export default function MapPage() {
@@ -18,14 +16,18 @@ export default function MapPage() {
   const [directionsDestination, setDirectionsDestination] = useState(null);
   const [durationText, setDurationText] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(true);
+  const [mobileFull, setMobileFull] = useState(false); // mobile full-screen toggle
 
   useEffect(() => {
+    const savedLocation = sessionStorage.getItem("userLocation");
+    if (savedLocation) setUserLocation(JSON.parse(savedLocation));
+
     const watchId = navigator.geolocation.watchPosition(
       (pos) => {
         if (pos.coords.accuracy < 200) {
-          setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-        } else {
-          console.warn("Bỏ qua vị trí do độ chính xác thấp:", pos.coords);
+          const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          setUserLocation(loc);
+          sessionStorage.setItem("userLocation", JSON.stringify(loc));
         }
       },
       (err) => console.error(err),
@@ -63,9 +65,9 @@ export default function MapPage() {
       setCurrentStepIndex(0);
       setDirectionsDestination(place.name);
       const durationSec = res.data.features[0].properties.segments[0].duration;
-      const mins = Math.round(durationSec / 60);
-      setDurationText(`${mins} phút`);
+      setDurationText(`${Math.round(durationSec / 60)} phút`);
       setDrawerOpen(true);
+      setMobileFull(false);
     } catch (err) {
       console.error(err);
       alert("Không thể lấy đường đi thực tế");
@@ -74,19 +76,14 @@ export default function MapPage() {
     }
   };
 
-  const handleDetail = (place) => {
-    alert(`Chi tiết:\n${place.name}\n${place.address}`);
-  };
-
-  const handleSelectPlace = (place) => {
-    setFlyToPosition([Number(place.latitude), Number(place.longitude)]);
-  };
-
+  const handleDetail = (place) => alert(`Chi tiết:\n${place.name}\n${place.address}`);
+  const handleSelectPlace = (place) => setFlyToPosition([Number(place.latitude), Number(place.longitude)]);
   const exitDirections = () => {
     setSteps([]);
     setRoute(null);
     setDirectionsDestination(null);
     setCurrentStepIndex(null);
+    setMobileFull(false);
   };
 
   useEffect(() => {
@@ -97,9 +94,7 @@ export default function MapPage() {
         const idx = steps.findIndex((step) => {
           const [lat, lng] =
             step.geometry?.coordinates?.[0] || [step.start_location?.lat, step.start_location?.lng];
-          const dLat = latitude - lat;
-          const dLng = longitude - lng;
-          const distance = Math.sqrt(dLat * dLat + dLng * dLng) * 111000;
+          const distance = Math.sqrt((latitude - lat) ** 2 + (longitude - lng) ** 2) * 111000;
           return distance < 20;
         });
         if (idx !== -1) setCurrentStepIndex(idx);
@@ -111,17 +106,17 @@ export default function MapPage() {
   }, [steps]);
 
   if (!userLocation)
-  return (
-    <div className="flex items-center justify-center h-screen w-screen bg-gray-100">
-      <div className="flex flex-col items-center space-y-4">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-gray-700 font-medium">Đang lấy vị trí...</p>
+    return (
+      <div className="flex items-center justify-center h-screen w-screen bg-gray-100">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-700 font-medium">Đang lấy vị trí...</p>
+        </div>
       </div>
-    </div>
-  );
+    );
 
   return (
-    <div className="relative h-screen w-screen overflow-x-hidden">
+    <div className="relative h-screen w-screen">
       <MapView
         userLocation={userLocation}
         results={results}
@@ -131,50 +126,24 @@ export default function MapPage() {
         steps={steps}
       />
 
-      {drawerOpen && (
-        <div className="absolute top-0 right-0 h-full w-80 bg-gray-200 shadow-2xl z-[9999] rounded-l-xl flex flex-col">
-          <button
-            className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 bg-gray-500 text-white rounded-l-full px-2 py-6 shadow-lg hover:bg-gray-600"
-            onClick={() => setDrawerOpen(false)}
-          >
-            ›
-          </button>
-
-          <div className="p-4">
-            {!steps.length ? <SearchBar onSearch={handleSearch} /> : <h2 className="font-semibold text-lg"></h2>}
-          </div>
-
-          <div className="flex-1 p-4 overflow-auto scrollbar-hide">
-            {!steps.length ? (
-              <ResultList
-                results={results}
-                onDirections={handleDirections}
-                onDetail={handleDetail}
-                onSelectPlace={handleSelectPlace}
-                loadingDirections={loadingDirections}
-                userLocation={userLocation}
-              />
-            ) : (
-              <DirectionsStep
-                steps={steps}
-                exitDirections={exitDirections}
-                destinationName={directionsDestination}
-                duration={durationText}
-                currentStepIndex={currentStepIndex}
-              />
-            )}
-          </div>
-        </div>
-      )}
-
-      {!drawerOpen && (
-        <button
-          className="absolute top-1/2 right-0 -translate-y-1/2 bg-gray-500 text-white rounded-l-full px-2 py-6 shadow-lg hover:bg-gray-600 z-[9999]"
-          onClick={() => setDrawerOpen(true)}
-        >
-          ‹
-        </button>
-      )}
+      <Sidebar
+        drawerOpen={drawerOpen}
+        setDrawerOpen={setDrawerOpen}
+        mobileFull={mobileFull}
+        setMobileFull={setMobileFull}
+        steps={steps}
+        results={results}
+        handleSearch={handleSearch}
+        handleDirections={handleDirections}
+        handleDetail={handleDetail}
+        handleSelectPlace={handleSelectPlace}
+        loadingDirections={loadingDirections}
+        userLocation={userLocation}
+        exitDirections={exitDirections}
+        directionsDestination={directionsDestination}
+        durationText={durationText}
+        currentStepIndex={currentStepIndex}
+      />
     </div>
   );
 }

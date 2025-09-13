@@ -43,7 +43,7 @@ export default function RatingCard({ ratingSummary, setRatingSummary, placeId })
   const distribution = ratingSummary?.distribution || {};
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 w-full md:w-3/4 relative">
+    <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 w-full md:w-3/4 relative -mt-6">
       <h3 className="text-xl font-semibold mb-4 text-gray-800 text-center">Đánh giá</h3>
 
       <div className="flex flex-col md:flex-row gap-6 md:gap-8 justify-center items-center md:items-start px-2 md:px-8 py-4">

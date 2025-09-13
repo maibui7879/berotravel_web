@@ -8,7 +8,7 @@ import Thumbnail from "./components/Thumbnail";
 import Info from "./components/Info";
 import RatingCard from "./components/RatingCard";
 import FavoriteCard from "./components/FavoriteCard";
-import EditImageModal from "./components/EditImageModal";
+import EditPlaceModal from "./components/EditPlaceModal";
 import CommentSection from "./components/CommentSection";
 
 export default function PlaceDetail() {
@@ -62,19 +62,22 @@ export default function PlaceDetail() {
     <div className="w-full absolute pb-8 -top-80 bg-gray-200">
         <Slider place={place} currentSlide={currentSlide} />
       <Thumbnail place={place} setShowModal={setShowModal} />
-      <div className="w-full md:w-3/4 mx-auto px-2 ">
+      <div className="w-full p-2 mx-auto justify-center">
+        <div className="md:w-3/4 mx-auto">
         <Info place={place} />
         <div className="flex justify-center">
           <FavoriteCard place={place} />
         </div>
-        <div className="mt-6 flex justify-center gap-4">
+        </div>
+        <div className="bg-gray-50 rounded-t-2xl">
+        <div className="mt-6 flex justify-center gap-4 md:w-3/4 mx-4 md:mx-auto">
           <RatingCard ratingSummary={ratingSummary} setRatingSummary={setRatingSummary} placeId={id} />
         </div>
-        <div className="mt-6 px-6">
+        <div className="mt-6 px-6 md:w-3/4 mx-auto">
           <CommentSection placeId={id} place={place} />
         </div>
         {showModal && (
-          <EditImageModal
+          <EditPlaceModal
             place={place}
             setPlace={setPlace}
             setShowModal={setShowModal}
@@ -84,6 +87,7 @@ export default function PlaceDetail() {
           />
         )}
       </div>
+    </div>
     </div>
   );
 }
