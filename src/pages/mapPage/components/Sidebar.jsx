@@ -20,6 +20,8 @@ export default function Sidebar({
   directionsDestination,
   durationText,
   currentStepIndex,
+  searched,
+  loading,
 }) {
   const sidebarRef = useRef(null);
   const startYRef = useRef(0);
@@ -50,7 +52,7 @@ export default function Sidebar({
     document.body.style.userSelect = "auto";
     const windowHeight = window.innerHeight;
     const currentHeight = sidebarRef.current.getBoundingClientRect().height;
-    setMobileFull(currentHeight > windowHeight * 0.7); // auto full nếu >70% màn hình
+    setMobileFull(currentHeight > windowHeight * 0.7);
   };
 
   return (
@@ -101,6 +103,8 @@ export default function Sidebar({
                 onSelectPlace={handleSelectPlace}
                 loadingDirections={loadingDirections}
                 userLocation={userLocation}
+                searched={searched}
+                loading={loading}
               />
             ) : (
               <DirectionsStep

@@ -75,29 +75,29 @@ export default function Header() {
 
           {dropdownOpen && (
             <div
-              className={`absolute right-0 mt-2 w-48 py-2 rounded-lg shadow-lg flex flex-col z-50 transition-all duration-200
-                ${transparent ? "bg-white/20 backdrop-blur-md border border-white/30" : "bg-white border border-gray-300"}`}
+              className={`absolute right-0 mt-2 w-48 py-2 rounded-lg shadow-lg flex flex-col z-50 bg-white text-gray-900 transition-all duration-200
+               `}
             >
               <Link
                 to="/profile"
-                className={`flex items-center gap-2 mx-4 px-2 py-3 transition-colors duration-200 rounded-t-lg border-b-2 
-                  ${transparent ? "text-white border-white/30 hover:text-gray-300" : "text-gray-800 border-gray-200 hover:text-gray-500"}`}
+                className={`flex items-center gap-2 mx-4 px-2 py-3 transition-colors duration-200 rounded-t-lg border-b
+                  ${transparent ? "text-gray-900 border-gray-200 hover:text-gray-700" : " border-gray-500 hover:text-gray-200"}`}
                 onClick={() => setDropdownOpen(false)}
               >
                 <FaIdBadge /> <span>Hồ sơ</span>
               </Link>
               <Link
                 to="/favorites"
-                className={`flex items-center gap-2 mx-4 px-2 py-3 transition-colors duration-200 border-b-2
-                  ${transparent ? "text-white border-white/30 hover:text-gray-300" : "text-gray-800 border-gray-200 hover:text-gray-500"}`}
+                className={`flex items-center gap-2 mx-4 px-2 py-3 transition-colors duration-200 border-b
+                  ${transparent ? "text-gray-900 border-gray-200 hover:text-gray-700" : " border-gray-500 hover:text-gray-200"}`}
                 onClick={() => setDropdownOpen(false)}
               >
                 <FaHeart /> <span>List yêu thích</span>
               </Link>
               <button
                 onClick={handleLogout}
-                className={`flex items-center gap-2 mx-4 px-2 py-3 transition-colors duration-200 border-b-2
-                  ${transparent ? "text-white border-white/30 hover:text-red-600" : "border-gray-300 text-red-500 hover:text-red-600"}`}
+                className={`flex items-center gap-2 mx-4 px-2 py-3 transition-colors duration-200 text-red-500
+                  ${transparent ? "  hover:text-red-600" : "text-red-500 hover:text-red-600"}`}
               >
                 <FaSignOutAlt /> <span >Đăng xuất</span>
               </button>

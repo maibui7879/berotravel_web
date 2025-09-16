@@ -1,12 +1,10 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:5000/api/favorite";
+import API from "../api"
 
 export const toggleFavorite = async (placeId) => {
   try {
-    const token = localStorage.getItem("token"); // lấy token đã lưu sau khi login
-    const res = await axios.post(
-      `${API_URL}/${placeId}`,
+    const token = localStorage.getItem("token");
+    const res = await API.post(
+      `/favorite/${placeId}`,
       {},
       {
         headers: {
@@ -24,7 +22,7 @@ export const toggleFavorite = async (placeId) => {
 export const getUserFavorites = async () => {
   try {
     const token = localStorage.getItem("token");
-    const res = await axios.get(API_URL, {
+    const res = await API.get("/favorite", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

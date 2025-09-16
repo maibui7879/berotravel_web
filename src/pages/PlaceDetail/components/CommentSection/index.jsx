@@ -112,13 +112,14 @@ export default function CommentSection({ placeId, place }) {
   };
 
   return (
-    <div className="p-6 mt-6 w-full">
+    <div className="p-6 mt-6 w-full text-xs md:text-sm">
+      {/* Tabs */}
       <div className="flex border-b border-gray-300 mb-6">
         <button
           onClick={() => setActiveTab("view")}
           className={`px-4 py-2 font-medium transition-colors duration-200 bg-transparent ${activeTab === "view" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
         >
-          Xem bình luận
+          Xem đánh giá
         </button>
         <button
           onClick={() => {
@@ -132,17 +133,24 @@ export default function CommentSection({ placeId, place }) {
           }}
           className={`px-4 py-2 font-medium transition-colors duration-200 bg-transparent ${activeTab === "write" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
         >
-          Viết bình luận
+          Viết đánh giá
+        </button>
+        <button
+          onClick={() => setActiveTab("album")}
+          className={`px-4 py-2 font-medium transition-colors duration-200 bg-transparent ${activeTab === "album" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
+        >
+          Album ảnh
         </button>
       </div>
 
+      {/* Nội dung theo tab */}
       <div className="relative min-h-[300px]">
         {activeTab === "view" && (
           <>
             {loading ? (
-              <p>Đang tải bình luận...</p>
+              <p>Đang tải đánh giá...</p>
             ) : reviews.length === 0 ? (
-              <p>Chưa có bình luận nào.</p>
+              <p>Giúp chúng tôi xây dựng trang web bằng cách để lại review.</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {reviews.map((r) => (
@@ -173,6 +181,30 @@ export default function CommentSection({ placeId, place }) {
             place={place}
           />
         )}
+
+      {activeTab === "album" && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-4">
+          {[
+            place?.image_url,
+            ...(place?.img_set?.filter((img) => img) || []),
+          ].length > 0 ? (
+            [
+              place?.image_url,
+              ...(place?.img_set?.filter((img) => img))
+            ].map((img, idx) => (
+              <img
+                key={idx}
+                src={img}
+                alt={`place-img-${idx}`}
+                className="w-full h-40 object-cover rounded-lg shadow hover:scale-105 transition-transform"
+              />
+            ))
+          ) : (
+            <p>Chưa có ảnh nào trong album.</p>
+          )}
+        </div>
+      )}
+
       </div>
 
       {showLoginModal && (

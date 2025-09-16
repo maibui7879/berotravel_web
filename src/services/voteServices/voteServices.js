@@ -12,7 +12,7 @@ export const getVotesByTarget = async (targetId, targetType) => {
   const res = await API.get("/votes", {
     params: { target_id: targetId, target_type: targetType },
   });
-  return res.data;
+  return Array.isArray(res.data) ? res.data : res.data.votes || [];
 };
 
 // Xóa vote theo id

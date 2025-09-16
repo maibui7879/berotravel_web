@@ -1,4 +1,3 @@
-// src/pages/mapPage/components/ResultList.jsx
 import { useEffect, useState } from "react";
 import { FaRoute, FaInfoCircle, FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -94,26 +93,7 @@ function PlaceCard({ place, userLocation, onDirections, onSelectPlace, loadingDi
           }`}
         >
           {loadingDirections ? (
-            <svg
-              className="animate-spin h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v8H4z"
-              ></path>
-            </svg>
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           ) : (
             <>
               <FaRoute /> Chỉ đường
@@ -138,19 +118,24 @@ function PlaceCard({ place, userLocation, onDirections, onSelectPlace, loadingDi
   );
 }
 
-function ResultList({ results, onDirections, onSelectPlace, loadingDirections, userLocation, loading }) {
+function ResultList({
+  results,
+  onDirections,
+  onSelectPlace,
+  loadingDirections,
+  userLocation,
+  loading,
+  searched,
+}) {
+  if (!searched) {
+    return <p className="text-gray-500 mt-4 text-center">Nhập từ khóa để tìm kiếm.</p>;
+  }
+
   if (loading) {
     return (
-      <div className="flex justify-center items-center mt-6">
-        <svg
-          className="animate-spin h-8 w-8 text-blue-500"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-        </svg>
+      <div className="flex flex-col items-center justify-center mt-6 space-y-2">
+        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-gray-600 text-sm">Đang tìm kiếm...</p>
       </div>
     );
   }

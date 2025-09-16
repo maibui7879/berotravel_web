@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaRoute } from "react-icons/fa";
 import { useAuth } from "../../../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 import { toggleFavorite } from "../../../services/favoriteServices/favouriteService";
 import { toast } from "react-toastify";
+import AnimatedButton from "../../../components/Button/AnimatedButton";
 
 export default function FavoriteCard({ place }) {
   const { user } = useAuth();
@@ -42,21 +43,42 @@ export default function FavoriteCard({ place }) {
     }
   };
 
+  const handleDirections = () => {
+    const url = `/?q=${encodeURIComponent(place.name)}&cat=&r=100&directions=${place._id}`;
+    navigate(url);
+  };
+
   return (
-    <div className="flex flex-row items-center space-x-2">
-      <FaHeart
-        size={30}
+    <div className="flex items-center gap-4 mb-4">
+      <div className="flex items-center gap-4">
+      </div>
+
+      {/* Nút chỉ đường */}
+      <AnimatedButton
+        onClick={handleDirections}
+        className="flex items-center gap-2 bg-green-500 text-white hover:bg-white hover:text-green-500 border border-green-500 shadow-lg text-sm"
+      >
+        <FaRoute /> Chỉ đường
+      </AnimatedButton>
+
+      {/* Nút toggle favorite */}
+      <AnimatedButton
         onClick={handleToggleFavorite}
-        className={`cursor-pointer transition-transform duration-200 ${
+        className={`flex items-center gap-2 border shadow-lg text-sm ${
           isFavorited
-            ? "text-red-500 drop-shadow-md"
-            : "text-transparent stroke-red-500 hover:text-red-400 hover:fill-red-400"
-        } ${isBouncing ? "animate-bounce-heart" : ""}`}
-        style={{ strokeWidth: 10 }}
-      />
-      <p className="text-lg text-gray-500 mt-4">
-        <span className="font-bold text-red-500">{favoriteCount} </span>
-      </p>
+            ? "bg-white text-red-500 hover:bg-red-500 hover:text-white border-red-500"
+            : "bg-red-500 text-white hover:bg-white hover:text-red-500 border-red-500"
+        }`}
+      >
+        <FaHeart
+          size={20}
+          className={`transition-transform duration-200 
+            ${isBouncing ? "animate-bounce-heart" : ""}`}
+        />
+        {isFavorited ? "Bỏ yêu thích" : "Yêu thích"}
+      </AnimatedButton>
+
+
       <style>
         {`
           @keyframes bounce-heart {

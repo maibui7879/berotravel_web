@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import MapView from "./components/MapView";
 import Sidebar from "./components/Sidebar";
 import { searchNearby } from "../../services/placeServices/searchPlace";
 import axios from "axios";
 
 export default function MapPage() {
+  const [loading, setLoading] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [results, setResults] = useState([]);
   const [route, setRoute] = useState(null);
@@ -16,7 +18,10 @@ export default function MapPage() {
   const [directionsDestination, setDirectionsDestination] = useState(null);
   const [durationText, setDurationText] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(true);
-  const [mobileFull, setMobileFull] = useState(false); // mobile full-screen toggle
+  const [mobileFull, setMobileFull] = useState(false);
+  const [searched, setSearched] = useState(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const savedLocation = sessionStorage.getItem("userLocation");
@@ -36,20 +41,68 @@ export default function MapPage() {
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
-  const handleSearch = async ({ name, category, radius }) => {
+  // Tự động load lại từ URL params
+  useEffect(() => {
     if (!userLocation) return;
+
+    const q = searchParams.get("q") || "";
+    const cat = searchParams.get("cat") || "";
+    const r = parseInt(searchParams.get("r") || "4", 10);
+    const directions = searchParams.get("directions");
+
+    if (q || cat) {
+      handleSearch({ name: q, category: cat, radius: r }, directions);
+    }
+  }, [userLocation]);
+
+  const handleSearch = async ({ name, category, radius }, autoDirectionsId = null) => {
+    if (!userLocation) return;
+    setLoading(true);
+    setSearched(true);
+    setResults([]);
     setRadius(radius);
+
+    // Lưu params vào URL (chưa có directions)
+    setSearchParams({ q: name, cat: category, r: radius });
+
     try {
-      const data = await searchNearby(userLocation.lat, userLocation.lng, radius, name, category);
+      const data = await searchNearby(
+        userLocation.lat,
+        userLocation.lng,
+        radius,
+        name,
+        category
+      );
       setResults(data);
+
+      // Nếu có param directions (reload) hoặc autoDirectionsId => mở luôn chỉ đường
+      const placeId = autoDirectionsId || searchParams.get("directions");
+      if (placeId) {
+        const found = data.find((p) => p._id === placeId);
+        if (found) handleDirections(found, true);
+      }
     } catch (err) {
       console.error(err);
+      setResults([]);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDirections = async (place) => {
+  const handleDirections = async (place, silent = false) => {
     if (!userLocation) return;
     setLoadingDirections(true);
+
+    // Lưu param directions vào URL
+    if (!silent) {
+      setSearchParams((prev) => {
+        const q = prev.get("q") || "";
+        const cat = prev.get("cat") || "";
+        const r = prev.get("r") || radius;
+        return { q, cat, r, directions: place._id };
+      });
+    }
+
     const API_KEY =
       "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjVlMjMxNjJjNGViMTQyZjc4ZjlmMzk5YzRkNTIxM2FmIiwiaCI6Im11cm11cjY0In0=";
     const start = `${userLocation.lng},${userLocation.lat}`;
@@ -76,14 +129,20 @@ export default function MapPage() {
     }
   };
 
-  const handleDetail = (place) => alert(`Chi tiết:\n${place.name}\n${place.address}`);
-  const handleSelectPlace = (place) => setFlyToPosition([Number(place.latitude), Number(place.longitude)]);
   const exitDirections = () => {
     setSteps([]);
     setRoute(null);
     setDirectionsDestination(null);
     setCurrentStepIndex(null);
     setMobileFull(false);
+
+    // Xóa directions khỏi URL nhưng giữ lại q, cat, r
+    setSearchParams((prev) => {
+      const q = prev.get("q") || "";
+      const cat = prev.get("cat") || "";
+      const r = prev.get("r") || radius;
+      return { q, cat, r };
+    });
   };
 
   useEffect(() => {
@@ -135,14 +194,16 @@ export default function MapPage() {
         results={results}
         handleSearch={handleSearch}
         handleDirections={handleDirections}
-        handleDetail={handleDetail}
-        handleSelectPlace={handleSelectPlace}
+        handleDetail={(p) => alert(`Chi tiết:\n${p.name}\n${p.address}`)}
+        handleSelectPlace={(p) => setFlyToPosition([+p.latitude, +p.longitude])}
         loadingDirections={loadingDirections}
         userLocation={userLocation}
         exitDirections={exitDirections}
         directionsDestination={directionsDestination}
         durationText={durationText}
         currentStepIndex={currentStepIndex}
+        loading={loading}
+        searched={searched}
       />
     </div>
   );

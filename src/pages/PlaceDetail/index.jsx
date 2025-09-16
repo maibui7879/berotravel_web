@@ -56,7 +56,7 @@ export default function PlaceDetail() {
   }, [id]);
 
   if (loading) return <div className="p-4">Loading...</div>;
-  if (!place) return <div className="p-4">Place not found</div>;
+  if (!place) return <div className="p-4">Địa điểm không tồn tại.</div>;
 
   return (
     <div className="w-full absolute pb-8 -top-80 bg-gray-200">
@@ -65,7 +65,7 @@ export default function PlaceDetail() {
       <div className="w-full p-2 mx-auto justify-center">
         <div className="md:w-3/4 mx-auto">
         <Info place={place} />
-        <div className="flex justify-center">
+        <div className="flex justify-center md:pr-4">
           <FavoriteCard place={place} />
         </div>
         </div>
