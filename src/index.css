@@ -21,7 +21,6 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
   text-decoration: inherit;
 }
 a:hover {
@@ -65,3 +64,11 @@ button:hover {
   }
 }
 
+input{
+  background-color: white;
+}
+
+.clip-trapezoid-left {
+  clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%);
+  background-color: #bfdbfe; /* tương ứng bg-blue-200 */
+}

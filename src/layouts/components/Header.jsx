@@ -44,18 +44,18 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-20 p-4 px-8 flex justify-between items-center shadow-lg transition-colors duration-300
-        ${transparent ? "bg-transparent text-white" : "bg-white text-black"}`}
+      className={`fixed top-0 left-0 w-full z-20 px-8 flex justify-between items-center shadow-lg transition-colors duration-300 z-[500]
+        ${transparent ? "bg-transparent text-white " : "bg-white text-black"}`}
     >
       <h1 className="text-xl font-bold">BeroTravel</h1>
 
-      <nav className="flex space-x-4 md:space-x-6 items-center relative">
+      <nav className="flex items-center relative">
         {navItems.map((item) => (
           <Link
             key={item.to}
             to={item.to}
-            className={`flex items-center gap-2 transition-colors duration-300
-              ${transparent ? "text-white hover:text-gray-300" : "text-black hover:text-gray-600"}`}
+            className={`flex items-center gap-2 transition-colors duration-300 p-6
+              ${transparent ? "text-white  hover:bg-white hover:text-black" : "text-black hover:bg-gray-600 hover:text-white"}`}
           >
             {item.icon}
             <span className="hidden md:inline">{item.label}</span>
@@ -85,14 +85,6 @@ export default function Header() {
                 onClick={() => setDropdownOpen(false)}
               >
                 <FaIdBadge /> <span>Hồ sơ</span>
-              </Link>
-              <Link
-                to="/favorites"
-                className={`flex items-center gap-2 mx-4 px-2 py-3 transition-colors duration-200 border-b
-                  ${transparent ? "text-gray-900 border-gray-200 hover:text-gray-700" : " border-gray-500 hover:text-gray-200"}`}
-                onClick={() => setDropdownOpen(false)}
-              >
-                <FaHeart /> <span>List yêu thích</span>
               </Link>
               <button
                 onClick={handleLogout}

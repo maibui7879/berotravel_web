@@ -22,6 +22,9 @@ export default function Sidebar({
   currentStepIndex,
   searched,
   loading,
+  page,
+  onReset,
+  total,
 }) {
   const sidebarRef = useRef(null);
   const startYRef = useRef(0);
@@ -64,7 +67,7 @@ export default function Sidebar({
             fixed right-0 bottom-0 md:top-0
             w-full md:w-[400px]
             ${mobileFull ? "h-full" : "h-[40%]"} md:h-full
-            bg-gray-200 shadow-2xl z-[9999]
+            bg-gray-200 shadow-2xl z-[9998]
             rounded-t-xl md:rounded-l-xl
             flex flex-col transition-all duration-300
           `}
@@ -74,7 +77,6 @@ export default function Sidebar({
           onTouchMove={handleMouseMove}
           onTouchEnd={handleMouseUp}
         >
-          {/* Toggle desktop */}
           <button
             className={`hidden md:block
               absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full
@@ -85,7 +87,6 @@ export default function Sidebar({
             ›
           </button>
 
-          {/* Mobile drag handle */}
           <div
             className="md:hidden w-12 h-1.5 bg-gray-400 rounded-full mx-auto mt-2 cursor-grab"
             onMouseDown={handleMouseDown}
@@ -98,6 +99,7 @@ export default function Sidebar({
             {!steps.length ? (
               <ResultList
                 results={results}
+                total={total}
                 onDirections={handleDirections}
                 onDetail={handleDetail}
                 onSelectPlace={handleSelectPlace}
@@ -105,6 +107,8 @@ export default function Sidebar({
                 userLocation={userLocation}
                 searched={searched}
                 loading={loading}
+                page={page}
+                onReset={onReset}
               />
             ) : (
               <DirectionsStep
@@ -119,7 +123,6 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* Toggle button desktop khi đóng */}
       {!drawerOpen && (
         <button
           className={`

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaRoute, FaInfoCircle, FaStar } from "react-icons/fa";
+import { FaRoute, FaInfoCircle, FaStar, FaSyncAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { getRatingSummary } from "../../../services/reviewServices/reviewServices";
 
@@ -118,14 +118,16 @@ function PlaceCard({ place, userLocation, onDirections, onSelectPlace, loadingDi
   );
 }
 
-function ResultList({
+export default function ResultList({
   results,
+  total,
   onDirections,
   onSelectPlace,
   loadingDirections,
   userLocation,
   loading,
   searched,
+  onReset
 }) {
   if (!searched) {
     return <p className="text-gray-500 mt-4 text-center">Nhập từ khóa để tìm kiếm.</p>;
@@ -146,9 +148,16 @@ function ResultList({
 
   return (
     <div className="mt-4">
-      <h3 className="text-lg font-semibold text-gray-800 mb-3">
-        Kết quả tìm kiếm ({results.length})
-      </h3>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-lg font-semibold text-gray-800">
+          Kết quả tìm kiếm ({total})
+        </h3>
+        <FaSyncAlt
+          onClick={onReset}
+          className="text-gray-500 hover:text-blue-500 text-xl cursor-pointer hover:rotate-180 transition-transform"
+        />
+      </div>
+
       <div className="space-y-3">
         {results.map((place, idx) => (
           <PlaceCard
@@ -164,5 +173,3 @@ function ResultList({
     </div>
   );
 }
-
-export default ResultList;

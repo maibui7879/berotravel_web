@@ -39,10 +39,10 @@ export default function EditPlaceModal({ place, setPlace, setShowModal, updating
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-start justify-center z-50 overflow-y-auto">
-      <div className="bg-white rounded-lg w-[95%] max-w-6xl shadow-lg relative flex flex-col mt-10 mb-10">
-        <div className="flex justify-between items-center border-b px-4 py-2">
-          <h2 className="text-lg font-bold">Chỉnh sửa địa điểm</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-start justify-center z-[501] overflow-y-auto">
+      <div className="rounded-lg w-[95%] max-w-6xl shadow-lg relative flex flex-col mt-10 mb-10">
+        <div className="flex justify-between items-center text-white px-4 py-2">
+          <h2 className="text-lg font-bold text-center mx-auto">Chỉnh sửa địa điểm</h2>
           <button
             onClick={() => setShowModal(false)}
             className="text-gray-500 hover:text-black text-xl"
@@ -53,7 +53,7 @@ export default function EditPlaceModal({ place, setPlace, setShowModal, updating
 
         <div className="px-4 grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Cột upload ảnh, ẩn khi mobile */}
-          <div className="hidden md:block">
+          <div className="hidden md:block bg-white rounded-lg shadow-md">
             <ImageUploader
               formData={formData}
               setFormData={setFormData}
@@ -65,7 +65,7 @@ export default function EditPlaceModal({ place, setPlace, setShowModal, updating
           </div>
 
           {/* Info + ảnh khi mobile */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 bg-white rounded-lg shadow-md">
             <InfoForm
               formData={formData}
               setFormData={setFormData}
@@ -84,10 +84,10 @@ export default function EditPlaceModal({ place, setPlace, setShowModal, updating
             </div>
           </div>
 
-          <MapPicker position={position} setPosition={setPosition} />
+          <MapPicker position={position} setPosition={setPosition} className="bg-white" />
         </div>
 
-        <div className="flex justify-end gap-3 border-t px-4 py-2">
+        <div className="flex justify-end gap-3 px-4 py-2">
           <button
             onClick={() => setShowModal(false)}
             className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"

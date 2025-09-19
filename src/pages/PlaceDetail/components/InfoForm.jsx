@@ -42,9 +42,9 @@ function FloatingTextarea({ label, value, onChange }) {
   );
 }
 
-export default function InfoForm({ formData, setFormData, position, setPosition }) {
+export default function InfoForm({ formData, setFormData }) {
   return (
-    <div className="flex flex-col border rounded">
+    <div className="flex flex-col rounded">
       <h3 className="text-base font-semibold p-2 border-b">Thông tin</h3>
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         <FloatingInput
@@ -59,7 +59,7 @@ export default function InfoForm({ formData, setFormData, position, setPosition 
         />
         <div className="relative w-full">
           <select
-            className="peer w-full px-4 pt-5 pb-2 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            className="peer w-full px-4 pt-5 pb-2 rounded-xl bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
             value={formData.category}
             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
           >
@@ -98,24 +98,6 @@ export default function InfoForm({ formData, setFormData, position, setPosition 
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
         />
-        <div className="grid grid-cols-2 gap-4">
-          <FloatingInput
-            label="Latitude"
-            type="number"
-            value={position ? position[0] : formData.latitude || ""}
-            onChange={(e) =>
-              setPosition([parseFloat(e.target.value), position ? position[1] : formData.longitude || 0])
-            }
-          />
-          <FloatingInput
-            label="Longitude"
-            type="number"
-            value={position ? position[1] : formData.longitude || ""}
-            onChange={(e) =>
-              setPosition([position ? position[0] : formData.latitude || 0, parseFloat(e.target.value)])
-            }
-          />
-        </div>
       </div>
     </div>
   );

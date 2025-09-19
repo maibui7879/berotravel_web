@@ -5,6 +5,7 @@ import { getReviews, createReview, updateReview, deleteReview } from "../../../.
 import { getUserById } from "../../../../services/userServices/getUserById";
 import ReviewCard from "./ReviewCard";
 import CommentForm from "./CommentForm";
+import AlbumTab from "./AlbumTab";
 import { toast } from "react-toastify";
 
 export default function CommentSection({ placeId, place }) {
@@ -36,13 +37,13 @@ export default function CommentSection({ placeId, place }) {
                 userCache[r.user_id] = {
                   _id: userData._id,
                   name: userData.name || "Người dùng",
-                  avatar_url: userData.avatar_url || "/src/assets/avatar-placeholder.png",
+                  avatar_url: userData.avatar_url || "/placeholder.png",
                 };
               } catch {
                 userCache[r.user_id] = {
                   _id: r.user_id,
                   name: "Người dùng",
-                  avatar_url: "/src/assets/avatar-placeholder.png",
+                  avatar_url: "/placeholder.png",
                 };
               }
             }
@@ -113,7 +114,6 @@ export default function CommentSection({ placeId, place }) {
 
   return (
     <div className="p-6 mt-6 w-full text-xs md:text-sm">
-      {/* Tabs */}
       <div className="flex border-b border-gray-300 mb-6">
         <button
           onClick={() => setActiveTab("view")}
@@ -143,7 +143,6 @@ export default function CommentSection({ placeId, place }) {
         </button>
       </div>
 
-      {/* Nội dung theo tab */}
       <div className="relative min-h-[300px]">
         {activeTab === "view" && (
           <>
@@ -182,29 +181,7 @@ export default function CommentSection({ placeId, place }) {
           />
         )}
 
-      {activeTab === "album" && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-4">
-          {[
-            place?.image_url,
-            ...(place?.img_set?.filter((img) => img) || []),
-          ].length > 0 ? (
-            [
-              place?.image_url,
-              ...(place?.img_set?.filter((img) => img))
-            ].map((img, idx) => (
-              <img
-                key={idx}
-                src={img}
-                alt={`place-img-${idx}`}
-                className="w-full h-40 object-cover rounded-lg shadow hover:scale-105 transition-transform"
-              />
-            ))
-          ) : (
-            <p>Chưa có ảnh nào trong album.</p>
-          )}
-        </div>
-      )}
-
+        {activeTab === "album" && <AlbumTab place={place} />}
       </div>
 
       {showLoginModal && (

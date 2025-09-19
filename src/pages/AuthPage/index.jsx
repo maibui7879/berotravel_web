@@ -49,7 +49,11 @@ export default function AuthPage() {
       return;
     }
     try {
-      await register({ ...registerData, type: "register" });
+      await register({
+        name: registerData.name,
+        email: registerData.email,
+        password: registerData.password,
+      });
       toast.success("Đăng ký thành công! Hãy đăng nhập.");
       setIsLogin(true);
       setRegisterData({ name: "", email: "", password: "", confirmPassword: "" });
@@ -59,7 +63,7 @@ export default function AuthPage() {
     }
   };
 
-  return (
+    return (
     <div className="h-screen w-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="relative w-full max-w-4xl flex flex-col md:flex-row overflow-hidden bg-white rounded-2xl shadow-lg">
         {/* Login form */}

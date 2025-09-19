@@ -1,7 +1,13 @@
 import { useState } from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaHome, FaMapMarkerAlt, FaUser } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
+import { useAuth } from "../../../contexts/authContext";
 
 export default function SearchBar({ onSearch }) {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [radius, setRadius] = useState(4);
@@ -9,18 +15,43 @@ export default function SearchBar({ onSearch }) {
 
   const handleSearch = () => {
     onSearch({ name, category, radius });
+    setShowAdvanced(false);
   };
 
+  const miniNavItems = [
+    { icon: <FaHome />, label: "Home", to: "/home" },
+    { icon: <FaMapMarkerAlt />, label: "Bản đồ", to: "/" },
+    { icon: <FaSearch />, label: "Khám phá", to: "/place" },
+    { icon: <FaUser />, label: "Profile", to: "/profile" },
+  ];
+
   return (
-    <div className="bg-white p-4 rounded-2xl shadow-md flex flex-col gap-3">
-      <h2>Tìm kiếm địa điểm</h2>
-      {/* Main search input */}
+    <div className="bg-white p-4 rounded-2xl shadow-md flex flex-col gap-3 w-full">
+      <div className="flex justify-between w-full mb-2">
+        {miniNavItems.map((item) => (
+          <Tippy content={item.label} key={item.to}>
+            <button
+              onClick={() => {
+                if (item.to === "/profile" && !user) navigate("/auth");
+                else navigate(item.to);
+              }}
+              className="p-3 rounded-xl transition flex items-center justify-center w-full mx-1 text-blue-500 hover:text-blue-600"
+            >
+              {item.icon}
+            </button>
+          </Tippy>
+        ))}
+      </div>
+
       <div className="relative flex items-center">
         <input
           type="text"
           placeholder="Tên địa điểm..."
           value={name}
           onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSearch();
+          }}
           className="border rounded-xl p-3 w-full pr-12 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         <button
@@ -31,7 +62,6 @@ export default function SearchBar({ onSearch }) {
         </button>
       </div>
 
-      {/* Toggle advanced options */}
       <button
         type="button"
         onClick={() => setShowAdvanced(!showAdvanced)}
@@ -40,7 +70,6 @@ export default function SearchBar({ onSearch }) {
         {showAdvanced ? "Ẩn tùy chọn nâng cao" : "Hiển thị tùy chọn nâng cao"}
       </button>
 
-      {/* Advanced search options */}
       {showAdvanced && (
         <div className="flex flex-col gap-3 mt-2">
           <select
