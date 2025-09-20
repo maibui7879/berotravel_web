@@ -2,7 +2,7 @@ export default function Slider({ place, currentSlide }) {
   const slides = place.img_set && place.img_set.length > 0 ? place.img_set : ["/placeholder.png"];
 
   return (
-    <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden">
+    <div className="relative w-full h-64 md:h-80 overflow-hidden">
       <img
         src={slides[currentSlide % slides.length]}
         alt={`slide-${currentSlide}`}

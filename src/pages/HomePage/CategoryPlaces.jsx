@@ -94,13 +94,6 @@ export default function CategoryPlaces({ userLocation }) {
               );
             })}
           </div>
-
-          <button
-            onClick={() => navigate("/place")}
-            className="bg-blue-500 text-white py-2 px-5 rounded-xl hover:bg-white hover:text-blue-500 border border-blue-500 transition-all duration-300 shadow-md hover:shadow-lg w-64 hover:scale-105 md:items-end md:self-end"
-          >
-            Tìm hiểu thêm
-          </button>
         </div>
       </div>
     </section>

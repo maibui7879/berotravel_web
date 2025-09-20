@@ -19,8 +19,8 @@ export default function SearchBar({ onSearch }) {
   };
 
   const miniNavItems = [
-    { icon: <FaHome />, label: "Home", to: "/home" },
-    { icon: <FaMapMarkerAlt />, label: "Bản đồ", to: "/" },
+    { icon: <FaHome />, label: "Home", to: "/" },
+    { icon: <FaMapMarkerAlt />, label: "Bản đồ", to: "/map" },
     { icon: <FaSearch />, label: "Khám phá", to: "/place" },
     { icon: <FaUser />, label: "Profile", to: "/profile" },
   ];

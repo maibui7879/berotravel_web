@@ -56,9 +56,10 @@ export default function StatsCards({ stats }) {
       {/* Giới thiệu ngắn về trang web */}
       <div className="mt-8 text-center max-w-3xl mx-auto">
         <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 mb-4">
-          Chào mừng đến với BeroTravel
+          Chào mừng đến với Bero<span className="text-blue-800 font-semibold italic font-serif ">Travel
+      </span>
         </h2>
-        <p className="text-gray-600 text-md md:text-lg">
+        <p className="text-gray-600 text-md md:text-lg font-sans">
           BeroTravel là nền tảng giúp bạn khám phá các địa điểm ăn uống, giải trí và trải nghiệm mới quanh bạn. 
           Theo dõi những review nổi bật, tìm kiếm quán yêu thích, và kết nối với cộng đồng du lịch năng động.
         </p>

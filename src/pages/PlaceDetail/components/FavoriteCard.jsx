@@ -44,7 +44,7 @@ export default function FavoriteCard({ place }) {
   };
 
   const handleDirections = () => {
-    const url = `/?q=${encodeURIComponent(place.name)}&cat=&r=100&directions=${place._id}`;
+    const url = `/map/?q=${encodeURIComponent(place.name)}&cat=&r=100&directions=${place._id}`;
     navigate(url);
   };
 

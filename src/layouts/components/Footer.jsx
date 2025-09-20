@@ -5,18 +5,38 @@ import { useNavigate } from "react-router-dom";
 export default function Footer() {
   const navigate = useNavigate();
 
+  const quickLinks = [
+    { label: "Trang chủ", path: "/" },
+    { label: "Địa điểm", path: "/place" },
+    { label: "Review", path: "/reviews" },
+    { label: "Về chúng tôi", path: "/about" },
+  ];
+
+  const categories = [
+    { label: "Nhà hàng", path: "/place?cat=restaurant" },
+    { label: "Công viên", path: "/place?cat=park" },
+    { label: "Điểm tham quan", path: "/place?cat=attraction" },
+    { label: "Quán bar", path: "/place?cat=bar" },
+  ];
+
+  const gradientClass =
+    "bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-indigo-600 hover:to-blue-500";
+
   return (
-    <footer className="bg-gray-900 text-gray-300 pt-12 relative">
+    <footer className="bg-gray-900 text-gray-300 pt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 
           {/* Logo + Intro */}
           <div className="space-y-4">
-            <h1 className="text-2xl font-bold text-white cursor-pointer" onClick={() => navigate("/")}>
+            <h1
+              className="text-2xl font-bold text-white cursor-pointer"
+              onClick={() => navigate("/")}
+            >
               Bero<span className="text-blue-500">Travel</span>
             </h1>
             <p className="text-gray-400 text-sm">
-              Khám phá những địa điểm tuyệt vời xung quanh bạn. Chúng tôi giúp bạn tìm nhà hàng, quán cafe, điểm tham quan một cách nhanh chóng và tiện lợi.
+              Khám phá những địa điểm tuyệt vời xung quanh bạn. Tìm nhà hàng, quán cafe, điểm tham quan nhanh chóng và tiện lợi.
             </p>
             <div className="flex gap-4 mt-2">
               <a href="#" className="hover:text-blue-500 transition"><FaFacebookF /></a>
@@ -29,10 +49,15 @@ export default function Footer() {
           <div className="space-y-2">
             <h3 className="text-white font-semibold">Liên kết nhanh</h3>
             <ul className="space-y-1">
-              <li className="hover:text-white cursor-pointer" onClick={() => navigate("/")}>Trang chủ</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => navigate("/place")}>Địa điểm</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => navigate("/reviews")}>Review</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => navigate("/about")}>Về chúng tôi</li>
+              {quickLinks.map((link) => (
+                <li
+                  key={link.label}
+                  onClick={() => navigate(link.path)}
+                  className={`cursor-pointer font-semibold transition-all duration-300 ${gradientClass}`}
+                >
+                  {link.label}
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -40,10 +65,15 @@ export default function Footer() {
           <div className="space-y-2">
             <h3 className="text-white font-semibold">Danh mục</h3>
             <ul className="space-y-1">
-              <li className="hover:text-white cursor-pointer" onClick={() => navigate("/place?cat=restaurant")}>Nhà hàng</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => navigate("/place?cat=park")}>Công viên</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => navigate("/place?cat=attraction")}>Điểm tham quan</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => navigate("/place?cat=bar")}>Quán bar</li>
+              {categories.map((cat) => (
+                <li
+                  key={cat.label}
+                  onClick={() => navigate(cat.path)}
+                  className={`cursor-pointer font-semibold transition-all duration-300 ${gradientClass}`}
+                >
+                  {cat.label}
+                </li>
+              ))}
             </ul>
           </div>
 

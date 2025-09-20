@@ -1,4 +1,3 @@
-// components/Card/SimplePlaceCard.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
@@ -53,7 +52,7 @@ export default function PlaceCard({ place, userLocation }) {
   return (
     <div
       onClick={handleClick}
-      className=" rounded-xl shadow-md bg-white hover:shadow-lg transition cursor-pointer overflow-hidden"
+      className=" rounded-xl shadow-md bg-white hover:shadow-lg transition cursor-pointer overflow-hidden text-black border border-blue-500"
     >
       <img
         src={
@@ -63,7 +62,7 @@ export default function PlaceCard({ place, userLocation }) {
         }
         onError={(e) => (e.currentTarget.src = "/placeholder.png")}
         alt={place?.name || "placeholder"}
-        className="w-full h-20 object-cover"
+        className="w-full h-40 object-cover"
       />
       <div className="p-4 flex flex-col gap-2">
         <p className="font-semibold text-md">{place?.name}</p>

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DefaultLayout from "../layouts/DefaultLayout";
 import MapLayout from "../layouts/MapLayout";
 import AuthLayout from "../layouts/AuthLayout";
-
+import ScrollToTop from "../utils/ScrollToTop";
 import HomePage from "../pages/HomePage";
 import MapPage from "../pages/mapPage";
 import PlacePage from "../pages/PlacePage";
@@ -20,6 +20,7 @@ import "react-toastify/dist/ReactToastify.css";
 export default function AppRoutes() {
   return (
     <Router>
+      <ScrollToTop />
       <AuthProvider>
         {/* Toast container chung cho toàn app */}
         <ToastContainer
@@ -37,7 +38,7 @@ export default function AppRoutes() {
         <Routes>
           {/* Public routes */}
           <Route
-            path="/home"
+            path="/"
             element={
               <DefaultLayout>
                 <HomePage />
@@ -63,7 +64,7 @@ export default function AppRoutes() {
 
           {/* Map Layout */}
           <Route
-            path="/"
+            path="/map"
             element={
               <MapLayout sidebar={<div>Sidebar content</div>}>
                 <MapProvider>

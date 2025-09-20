@@ -76,7 +76,7 @@ export default function ReviewSection({ review }) {
   });
 
   return (
-    <div className="bg-white rounded-2xl p-6 pt-16 relative shadow-lg flex flex-col items-center text-center transition-transform duration-200 hover:-translate-y-3 hover:shadow-2xl min-h-[20rem] w-full mx-auto">
+    <div className="bg-white rounded-2xl p-6 pt-16 relative shadow-lg flex flex-col items-center text-center transition-transform duration-200 hover:-translate-y-3 hover:shadow-2xl min-h-[20rem] w-full mx-auto shadow-t-lg">
       <div className="rounded-full absolute -top-12 border-8 border-gray-50">
         <img
           src={review.user_id?.avatar_url || "/src/assets/avatar-placeholder.png"}

@@ -59,7 +59,7 @@ export default function PlaceDetail() {
   if (!place) return <div className="p-4">Địa điểm không tồn tại.</div>;
 
   return (
-    <div className="w-full absolute pb-8 -top-80 bg-gray-200">
+    <div className="w-full pb-8 bg-gray-200">
         <Slider place={place} currentSlide={currentSlide} />
       <Thumbnail place={place} setShowModal={setShowModal} />
       <div className="w-full p-2 mx-auto justify-center">

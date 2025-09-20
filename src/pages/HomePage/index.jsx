@@ -1,4 +1,3 @@
-// HomePage.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MapView from "../mapPage/components/MapView";
@@ -23,23 +22,29 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      const watchId = navigator.geolocation.watchPosition(
-        (pos) => {
-          setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-          setLoading(false);
-        },
-        (err) => {
-          console.error(err);
-          setLoading(false);
-        },
-        { enableHighAccuracy: true, maximumAge: 0, timeout: 30000 }
-      );
-      return () => navigator.geolocation.clearWatch(watchId);
-    } else {
-      console.error("Trình duyệt không hỗ trợ định vị");
+    const savedLocation = sessionStorage.getItem("userLocation");
+    if (savedLocation) {
+      setUserLocation(JSON.parse(savedLocation));
       setLoading(false);
     }
+
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        if (pos.coords.accuracy < 200) {
+          const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          setUserLocation(loc);
+          sessionStorage.setItem("userLocation", JSON.stringify(loc));
+          setLoading(false);
+        }
+      },
+      (err) => {
+        console.error(err);
+        setLoading(false);
+      },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 30000 }
+    );
+
+    return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
   useEffect(() => {
@@ -85,7 +90,7 @@ export default function HomePage() {
 
   const handleSearch = () => {
     if (!searchQuery.trim()) return;
-    navigate(`/?q=${encodeURIComponent(searchQuery)}&cat=&r=100&page=1`);
+    navigate(`/map/?q=${encodeURIComponent(searchQuery)}&cat=&r=100&page=1`);
   };
 
   if (loading || !userLocation) {
@@ -101,18 +106,12 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Map */}
       <section className="relative h-screen w-full">
-        <MapView
-          userLocation={userLocation}
-          results={[]}
-          route={null}
-          radius={4}
-          flyToPosition={null}
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-30 flex flex-col items-center justify-center text-center p-4 z-[400]">
+        <MapView userLocation={userLocation} results={[]} route={null} radius={4} flyToPosition={null} />
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center p-4 z-[400]">
           <h1 className="text-white text-4xl md:text-5xl font-bold mb-3">
-            Khám phá địa điểm cùng Bero<span className="text-blue-900">Travel</span>
+            Khám phá địa điểm cùng Bero<span className="text-blue-500 font-semibold italic font-serif ">Travel
+      </span>
           </h1>
           <p className="text-white text-md md:text-lg mb-4">
             Tìm quán cafe, nhà hàng và trải nghiệm mới gần bạn
@@ -136,18 +135,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats Cards */}
       <StatsCards stats={stats} />
-
-      {/* Recommended Places */}
       <RecommendedPlaces places={recommendedPlaces} userLocation={userLocation} />
-
-      {/* Category Places */}
       <CategoryPlaces userLocation={userLocation} />
-
-      {/* Map Preview */}
       <MapPreview userLocation={userLocation} />
-      {/* Top Reviews */}
       {topReviews.length > 0 && (
         <section
           className="px-4 md:px-12 py-12 relative"
@@ -157,11 +148,8 @@ export default function HomePage() {
             backgroundPosition: "center",
           }}
         >
-          {/* Lớp phủ */}
-          <div className="absolute inset-0 bg-black bg-opacity-40 z-0"></div>
-
-          <div className="relative z-10">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-20">Review nổi bật</h2>
+          <div className="absolute inset-0 bg-white bg-opacity-50 z-0"></div>
+          <div className="relative z-10 pt-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {topReviews.map((review) => (
                 <ReviewSection key={review._id} review={review} />
