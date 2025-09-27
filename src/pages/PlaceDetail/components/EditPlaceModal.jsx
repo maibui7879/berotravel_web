@@ -1,10 +1,18 @@
+// EditPlaceModal.jsx
 import { useState } from "react";
 import { updatePlace } from "../../../services/placeServices/updatePlace";
-import ImageUploader from "./ImageUploader";
-import InfoForm from "./InfoForm";
-import MapPicker from "./MapPicker";
+import ImageUploader from "../../../components/Modal/ImageUploader";
+import InfoForm from "../../../components/Modal/InfoForm";
+import MapPicker from "../../../components/Modal/MapPicker";
 
-export default function EditPlaceModal({ place, setPlace, setShowModal, updating, setUpdating, id }) {
+export default function EditPlaceModal({
+  place,
+  setPlace,
+  setShowModal,
+  updating,
+  setUpdating,
+  id,
+}) {
   const [formData, setFormData] = useState({
     name: place.name || "",
     address: place.address || "",
@@ -40,20 +48,19 @@ export default function EditPlaceModal({ place, setPlace, setShowModal, updating
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-start justify-center z-[501] overflow-y-auto">
-      <div className="rounded-lg w-[95%] max-w-6xl shadow-lg relative flex flex-col mt-10 mb-10">
-        <div className="flex justify-between items-center text-white px-4 py-2">
-          <h2 className="text-lg font-bold text-center mx-auto">Chỉnh sửa địa điểm</h2>
+      <div className="rounded-2xl w-[95%] max-w-6xl shadow-2xl relative flex flex-col mt-10 mb-10 bg-white">
+        <div className="flex justify-between items-center px-6 border-b rounded-t-2xl bg-gradient-to-r from-blue-600 to-blue-500">
+          <h2 className="text-lg font-bold text-white">Chỉnh sửa địa điểm</h2>
           <button
             onClick={() => setShowModal(false)}
-            className="text-gray-500 hover:text-black text-xl"
+            className="text-white hover:text-gray-200 text-2xl"
           >
             ✕
           </button>
         </div>
 
-        <div className="px-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Cột upload ảnh, ẩn khi mobile */}
-          <div className="hidden md:block bg-white rounded-lg shadow-md">
+        <div className="px-4 grid grid-cols-1 md:grid-cols-3 gap-5 py-5">
+          <div className="hidden md:block">
             <ImageUploader
               formData={formData}
               setFormData={setFormData}
@@ -64,8 +71,7 @@ export default function EditPlaceModal({ place, setPlace, setShowModal, updating
             />
           </div>
 
-          {/* Info + ảnh khi mobile */}
-          <div className="flex flex-col gap-4 bg-white rounded-lg shadow-md">
+          <div className="flex flex-col gap-5">
             <InfoForm
               formData={formData}
               setFormData={setFormData}
@@ -84,19 +90,19 @@ export default function EditPlaceModal({ place, setPlace, setShowModal, updating
             </div>
           </div>
 
-          <MapPicker position={position} setPosition={setPosition} className="bg-white" />
+          <MapPicker position={position} setPosition={setPosition} />
         </div>
 
-        <div className="flex justify-end gap-3 px-4 py-2">
+        <div className="flex justify-end gap-3 px-6 py-4 border-t bg-gray-50 rounded-b-2xl">
           <button
             onClick={() => setShowModal(false)}
-            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+            className="px-5 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 hover:text-red-500 transition"
           >
             Huỷ
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+            className="px-5 py-2 rounded-xl bg-blue-600 text-white hover:bg-white hover:text-blue-600 border border-blue-600 transition disabled:opacity-50"
             disabled={updating}
           >
             {updating ? "Đang lưu..." : "Xác nhận"}

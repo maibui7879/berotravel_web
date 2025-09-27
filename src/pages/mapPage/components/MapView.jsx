@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap, useMapEvents } from "react-leaflet";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import L from "leaflet";
 import AddPlaceModal from "./AddPlaceModal";
 
@@ -8,6 +8,14 @@ const defaultIcon = new L.Icon({
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
+  popupAnchor: [0, -45],
+});
+
+const userIcon = new L.Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", // icon màu khác (ví dụ xanh)
+  iconSize: [35, 35],
+  iconAnchor: [17, 35],
+  popupAnchor: [0, -35],
 });
 
 const activeIcon = new L.Icon({
@@ -15,6 +23,7 @@ const activeIcon = new L.Icon({
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
   iconSize: [35, 55],
   iconAnchor: [17, 55],
+  popupAnchor: [0, -45],
 });
 
 function FlyToMarker({ position }) {
@@ -37,14 +46,33 @@ function ClickHandler({ onClick }) {
 }
 
 export default function MapView({ userLocation, results, route, radius, flyToPosition, onMarkerClick }) {
-  const [newMarker, setNewMarker] = useState(null); // marker tạm
+  const [newMarker, setNewMarker] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [selectedPosition, setSelectedPosition] = useState(null); // marker đã xác nhận mở modal
+  const [selectedPosition, setSelectedPosition] = useState(null);
+  const [activePlaceId, setActivePlaceId] = useState(null);
+
+  const markerRefs = useRef({});
+
+  useEffect(() => {
+    if (flyToPosition && results.length > 0) {
+      const matched = results.find(
+        (p) =>
+          Number(p.latitude) === Number(flyToPosition[0]) &&
+          Number(p.longitude) === Number(flyToPosition[1])
+      );
+      if (matched) {
+        setActivePlaceId(matched._id);
+        if (markerRefs.current[matched._id]) {
+          markerRefs.current[matched._id].openPopup();
+        }
+      }
+    }
+  }, [flyToPosition, results]);
 
   const handleAddPlace = (pos) => {
-    setSelectedPosition(pos); // chuyển sang marker “xác nhận”
+    setSelectedPosition(pos);
     setShowAddModal(true);
-    setNewMarker(null); // xoá marker tạm
+    setNewMarker(null);
   };
 
   return (
@@ -59,7 +87,7 @@ export default function MapView({ userLocation, results, route, radius, flyToPos
 
         <ClickHandler onClick={(pos) => setNewMarker(pos)} />
 
-        <Marker position={[userLocation.lat, userLocation.lng]} icon={defaultIcon}>
+        <Marker position={[userLocation.lat, userLocation.lng]} icon={userIcon}>
           <Popup closeButton={false}>Bạn đang ở đây</Popup>
         </Marker>
 
@@ -77,21 +105,26 @@ export default function MapView({ userLocation, results, route, radius, flyToPos
 
           return (
             <Marker
-              key={idx}
+              key={place._id || idx}
               position={[Number(place.latitude), Number(place.longitude)]}
               icon={isActive ? activeIcon : defaultIcon}
+              ref={(el) => (markerRefs.current[place._id] = el)}
               eventHandlers={{
-                click: () => onMarkerClick([Number(place.latitude), Number(place.longitude)]),
+                click: () => {
+                  setActivePlaceId(place._id);
+                  onMarkerClick([Number(place.latitude), Number(place.longitude)]);
+                },
               }}
             >
-              <Popup closeButton={false}>{place.name}</Popup>
+              <Popup closeButton={false} autoPan={true}>
+                {place.name}
+              </Popup>
             </Marker>
           );
         })}
 
         {route && <Polyline positions={route.map(([lat, lng]) => [lat, lng])} color="blue" />}
 
-        {/* Marker tạm */}
         {newMarker && (
           <Marker position={newMarker} icon={activeIcon}>
             <Popup closeButton={false}>

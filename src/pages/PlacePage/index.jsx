@@ -37,11 +37,11 @@ export default function PlacePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-12 relative">
+    <div className="min-h-screen bg-white pb-12 relative">
       {/* Loading overlay */}
       {(loading || !userLocation) && (
         <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-50">
-          <div className="flex flex-col items-center space-y-4">
+          <div className="flex flex-col items-center space-y-4 ">
             <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
             <p className="text-gray-700 font-medium">Đang lấy vị trí...</p>
           </div>

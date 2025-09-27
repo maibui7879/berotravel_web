@@ -52,22 +52,31 @@ export default function PlaceCard({ place, userLocation }) {
   return (
     <div
       onClick={handleClick}
-      className=" rounded-xl shadow-md bg-white hover:shadow-lg transition cursor-pointer overflow-hidden text-black border border-blue-500"
+      className="group rounded-xl shadow-md bg-white hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-gray-200"
     >
-      <img
-        src={
-          place?.image_url && place.image_url.trim() !== "" && place.image_url !== "NaN"
-            ? place.image_url
-            : "/placeholder.png"
-        }
-        onError={(e) => (e.currentTarget.src = "/placeholder.png")}
-        alt={place?.name || "placeholder"}
-        className="w-full h-40 object-cover"
-      />
-      <div className="p-4 flex flex-col gap-2">
-        <p className="font-semibold text-md">{place?.name}</p>
-        {distance && <p className="text-sm text-gray-500">{distance} km</p>}
+      {/* Ảnh + overlay */}
+      <div className="relative w-full h-40 overflow-hidden rounded-t-xl">
+        <img
+          src={
+            place?.image_url && place.image_url.trim() !== "" && place.image_url !== "NaN"
+              ? place.image_url
+              : "/placeholder.png"
+          }
+          onError={(e) => (e.currentTarget.src = "/placeholder.png")}
+          alt={place?.name || "placeholder"}
+          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent group-hover:from-black/50 transition duration-300"></div>
+        <p className="absolute bottom-2 left-3 text-white font-semibold text-lg drop-shadow">
+          {place?.name}
+        </p>
+      </div>
 
+      {/* Nội dung */}
+      <div className="p-4 flex flex-col gap-2">
+        {distance && (
+          <p className="text-sm text-gray-500">{distance} km từ vị trí của bạn</p>
+        )}
         <div className="flex items-center gap-1">
           {Array.from({ length: 5 }, (_, i) => (
             <FaStar
@@ -75,8 +84,8 @@ export default function PlaceCard({ place, userLocation }) {
               className={i < Math.round(avgRating) ? "text-yellow-400" : "text-gray-300"}
             />
           ))}
-          <span className="ml-1 text-sm font-semibold text-gray-600">
-            ({totalVotes})
+          <span className="ml-1 text-sm font-medium text-gray-600">
+            {avgRating.toFixed(1)} • {totalVotes} đánh giá
           </span>
         </div>
       </div>

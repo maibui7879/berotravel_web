@@ -151,7 +151,7 @@ export default function CommentSection({ placeId, place }) {
             ) : reviews.length === 0 ? (
               <p>Giúp chúng tôi xây dựng trang web bằng cách để lại review.</p>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {reviews.map((r) => (
                   <ReviewCard
                     key={r._id}

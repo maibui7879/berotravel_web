@@ -50,13 +50,11 @@ export default function FavoriteCard({ place }) {
 
   return (
     <div className="flex items-center gap-4 mb-4">
-      <div className="flex items-center gap-4">
-      </div>
-
       {/* Nút chỉ đường */}
       <AnimatedButton
         onClick={handleDirections}
-        className="flex items-center gap-2 bg-green-500 text-white hover:bg-white hover:text-green-500 border border-green-500 shadow-lg text-sm"
+        className="flex items-center gap-2 bg-green-500 text-white border border-green-500 shadow-lg text-sm 
+                   hover:bg-white hover:text-green-500 transition-colors duration-300"
       >
         <FaRoute /> Chỉ đường
       </AnimatedButton>
@@ -64,7 +62,7 @@ export default function FavoriteCard({ place }) {
       {/* Nút toggle favorite */}
       <AnimatedButton
         onClick={handleToggleFavorite}
-        className={`flex items-center gap-2 border shadow-lg text-sm ${
+        className={`flex items-center gap-2 border shadow-lg text-sm transition-colors duration-300 ${
           isFavorited
             ? "bg-white text-red-500 hover:bg-red-500 hover:text-white border-red-500"
             : "bg-red-500 text-white hover:bg-white hover:text-red-500 border-red-500"
@@ -77,7 +75,6 @@ export default function FavoriteCard({ place }) {
         />
         {isFavorited ? "Bỏ yêu thích" : "Yêu thích"}
       </AnimatedButton>
-
 
       <style>
         {`

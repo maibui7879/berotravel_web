@@ -1,8 +1,9 @@
+// src/pages/Place/AddPlaceModal.jsx
 import { useState } from "react";
-import { FaCheck } from "react-icons/fa";
 import { createPlace } from "../../../services/placeServices/createPlace";
-import InfoForm from "../../PlaceDetail/components/InfoForm";
-import ImageUploader from "../../PlaceDetail/components/ImageUploader";
+import InfoForm from "../../../components/Modal/InfoForm";
+import ImageUploader from "../../../components/Modal/ImageUploader";
+import NotificationModal from "../../../components/Modal/NotificationModal";
 
 export default function AddPlaceModal({ position, onClose, onCreated }) {
   const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ export default function AddPlaceModal({ position, onClose, onCreated }) {
   });
 
   const [updating, setUpdating] = useState(false);
-  const [showNotification, setShowNotification] = useState(false);
+  const [notification, setNotification] = useState("");
   const [errorToast, setErrorToast] = useState("");
 
   const handleSave = async () => {
@@ -33,9 +34,8 @@ export default function AddPlaceModal({ position, onClose, onCreated }) {
 
       onClose();
       setUpdating(false);
-      setShowNotification(true);
-
-      setTimeout(() => setShowNotification(false), 2000);
+      setNotification("Thêm địa điểm thành công");
+      setTimeout(() => setNotification(""), 2000);
     } catch (err) {
       console.error("Tạo địa điểm thất bại:", err);
       setErrorToast("Thêm địa điểm thất bại, vui lòng thử lại!");
@@ -44,7 +44,6 @@ export default function AddPlaceModal({ position, onClose, onCreated }) {
     }
   };
 
-  // Đóng modal khi bấm ra ngoài
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -54,12 +53,12 @@ export default function AddPlaceModal({ position, onClose, onCreated }) {
   return (
     <>
       <div
-        className="fixed inset-0 bg-black bg-opacity-60 flex items-start justify-center z-[9999] overflow-y-auto"
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-[9999] overflow-y-auto"
         onClick={handleBackdropClick}
       >
-        <div className="rounded-lg w-full max-w-5xl shadow-lg relative flex flex-col mt-10 mb-10">
-          <div className="px-4 grid grid-cols-1 md:grid-cols-2 md:w-3/4 md:mx-auto gap-4">
-            <div className="hidden md:block bg-white rounded-lg shadow-md">
+        <div className="rounded-2xl w-full max-w-5xl shadow-xl relative flex flex-col mt-12 mb-12 bg-gray-50">
+          <div className="px-6 grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+            <div className="hidden md:block bg-white rounded-xl shadow">
               <ImageUploader
                 formData={formData}
                 setFormData={setFormData}
@@ -69,7 +68,7 @@ export default function AddPlaceModal({ position, onClose, onCreated }) {
               />
             </div>
 
-            <div className="flex flex-col gap-4 bg-white rounded-lg shadow-md">
+            <div className="flex flex-col gap-4 bg-white rounded-xl shadow">
               <InfoForm
                 formData={formData}
                 setFormData={setFormData}
@@ -88,11 +87,10 @@ export default function AddPlaceModal({ position, onClose, onCreated }) {
             </div>
           </div>
 
-          {/* Chỉ còn nút Xác nhận, căn giữa */}
-          <div className="flex justify-center px-4 py-2 max-w-3xl w-full mx-auto">
+          <div className="flex justify-center px-6 py-4 border-t">
             <button
               onClick={handleSave}
-              className="px-6 py-2 rounded bg-blue-600 text-white hover:bg-white hover:text-blue-700 border-blue-700 disabled:opacity-50 text-center relative"
+              className="px-8 py-2 rounded-xl bg-blue-600 text-white font-medium shadow hover:bg-blue-700 transition disabled:opacity-50 relative"
               disabled={updating}
             >
               {updating ? (
@@ -105,26 +103,15 @@ export default function AddPlaceModal({ position, onClose, onCreated }) {
         </div>
       </div>
 
-      {/* Modal thông báo thành công */}
-      {showNotification && (
-        <div className="fixed inset-0 flex items-center justify-center z-[10000]">
-          <div className="bg-white rounded-lg shadow-lg w-80">
-            <div className="px-4 py-2 border-b font-semibold">Thông báo</div>
-            <div className="flex flex-col items-center justify-center p-6">
-              <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mb-3">
-                <FaCheck className="text-white text-xl" />
-              </div>
-              <p className="text-green-500 font-medium">
-                Thêm địa điểm thành công
-              </p>
-            </div>
-          </div>
-        </div>
+      {notification && (
+        <NotificationModal
+          message={notification}
+          onClose={() => setNotification("")}
+        />
       )}
 
-      {/* Toast lỗi */}
       {errorToast && (
-        <div className="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-[10000]">
+        <div className="fixed bottom-6 right-6 bg-red-500 text-white px-5 py-3 rounded-xl shadow-lg z-[10000] animate-fade-in">
           {errorToast}
         </div>
       )}

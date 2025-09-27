@@ -63,10 +63,9 @@ export default function AuthPage() {
     }
   };
 
-    return (
+  return (
     <div className="h-screen w-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="relative w-full max-w-4xl flex flex-col md:flex-row overflow-hidden bg-white rounded-2xl shadow-lg">
-        {/* Login form */}
         <div
           className={`w-full md:w-1/2 p-10 flex flex-col justify-center items-center transition-all duration-700 ${
             isLogin ? "block" : "hidden md:flex"
@@ -77,17 +76,15 @@ export default function AuthPage() {
           <form className="w-full flex flex-col gap-5" onSubmit={handleLogin}>
             <FloatingInput
               label="Email"
-              type="email"
+              type="text"
               value={loginData.email}
               onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-              required
             />
             <FloatingInput
               label="Mật khẩu"
-              type="password"
+              type="text"
               value={loginData.password}
               onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-              required
             />
             <AnimatedButton
               type="submit"
@@ -115,7 +112,6 @@ export default function AuthPage() {
           </div>
         </div>
 
-        {/* Register form */}
         <div
           className={`w-full md:w-1/2 p-10 flex flex-col justify-center items-center transition-all duration-700 ${
             isLogin ? "hidden md:flex" : "block"
@@ -129,30 +125,26 @@ export default function AuthPage() {
               type="text"
               value={registerData.name}
               onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
-              required
             />
             <FloatingInput
               label="Email"
-              type="email"
+              type="text"
               value={registerData.email}
               onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
-              required
             />
             <FloatingInput
               label="Mật khẩu"
-              type="password"
+              type="text"
               value={registerData.password}
               onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
-              required
             />
             <FloatingInput
               label="Xác nhận mật khẩu"
-              type="password"
+              type="text"
               value={registerData.confirmPassword}
               onChange={(e) =>
                 setRegisterData({ ...registerData, confirmPassword: e.target.value })
               }
-              required
               invalid={registerData.confirmPassword && !isConfirmValid}
             />
             <AnimatedButton
@@ -181,7 +173,6 @@ export default function AuthPage() {
           </div>
         </div>
 
-        {/* Overlay */}
         <div className="hidden md:flex absolute top-0 left-0 w-full h-full pointer-events-none rounded-2xl overflow-hidden">
           <div
             className={`h-full w-1/2 bg-blue-500 text-white flex flex-col justify-center items-center transition-transform duration-700 pointer-events-auto ${

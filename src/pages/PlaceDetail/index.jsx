@@ -59,7 +59,7 @@ export default function PlaceDetail() {
   if (!place) return <div className="p-4">Địa điểm không tồn tại.</div>;
 
   return (
-    <div className="w-full pb-8 bg-gray-200">
+    <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         <Slider place={place} currentSlide={currentSlide} />
       <Thumbnail place={place} setShowModal={setShowModal} />
       <div className="w-full p-2 mx-auto justify-center">
@@ -70,7 +70,7 @@ export default function PlaceDetail() {
         </div>
         </div>
         <div className="bg-gray-50 rounded-t-2xl">
-        <div className="mt-6 flex justify-center gap-4 md:w-3/4 mx-4 md:mx-auto">
+        <div className="mt-20 flex justify-center gap-4 md:w-3/4 mx-4 md:mx-auto">
           <RatingCard ratingSummary={ratingSummary} setRatingSummary={setRatingSummary} placeId={id} />
         </div>
         <div className="mt-6 px-6 md:w-3/4 mx-auto">

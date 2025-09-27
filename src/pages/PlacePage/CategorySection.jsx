@@ -111,7 +111,7 @@ export default function CategorySection({ userLocation, categories }) {
     park:
       "https://streamline.imgix.net/c8d2a279-bd08-4d37-bb32-8e261a0a0523/15faf87b-9d28-42d4-9c4b-8d108891e1c5/Community%20Park%20Picnic%2005.01.24-9.jpg?ixlib=rb-1.1.0&w=2000&h=2000&fit=max&or=0&s=25210333454541e358896d6d90d8929e",
     restaurant:
-      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/27/d5/bb/74/lounge.jpg?w=900&h=500&s=1",
+      "https://www.gastwerk.com/site/assets/files/72635/gastwerk-hotel-hamburg_restaurant-mangold_interior_06.1760x1100.jpg",
     attraction:
       "https://www.visitlondon.com/-/media/images/london/visit/things-to-do/sightseeing/london-attractions/coca-cola-london-eye/the-london-eye-2-640x360.jpg?mw=640&rev=95097c3d2aab47109d7b0e944c804d1b&hash=F3E08589FAB39D902A18A111B8C7549C",
     bar: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/aa/b9/fa/caption.jpg?w=900&h=500&s=1",
@@ -126,9 +126,9 @@ export default function CategorySection({ userLocation, categories }) {
         const bgImage = backgroundImages[cat.value];
 
         return (
-          <div key={cat.value} className="relative w-full">
+          <div key={cat.value} className="relative w-full bg-white">
             <div
-              className="relative z-0 w-full rounded-t-2xl"
+              className="relative z-0 w-full rounded-t-2xl "
               style={{
                 backgroundImage: `url(${bgImage})`,
                 backgroundSize: "cover",
@@ -136,7 +136,7 @@ export default function CategorySection({ userLocation, categories }) {
               }}
             >
               <div
-                className="absolute inset-0 -z-10"
+                className="absolute inset-0 -z-10 rounded-t-2xl"
                 style={{
                   background:
                     "linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.1) 40%, rgba(255,255,255,0.8) 90%, #ffffff)",
@@ -182,7 +182,7 @@ export default function CategorySection({ userLocation, categories }) {
                   )}
 
                   {places.length === 0 && !loading && (
-                    <p className="text-red-500 text-lg mt-4">
+                    <p className="text-red-500 text-lg mt-4 col-span-full">
                       Không tìm thấy địa điểm nào.
                     </p>
                   )}
@@ -198,36 +198,72 @@ export default function CategorySection({ userLocation, categories }) {
                 </div>
 
                 {totalPages > 1 && (
-                  <div className="flex flex-col md:flex-row justify-center items-center gap-3 mt-8">
-                    <button
-                      disabled={page === 1}
-                      onClick={() =>
-                        fetchCategory(cat.value, page - 1, searchQueries[cat.value] || "")
-                      }
-                      className={`px-2 py-2 rounded-lg border ${
-                        page === 1
-                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                          : "bg-white text-blue-700 border-blue-700 hover:bg-blue-700 hover:text-white"
-                      }`}
-                    >
-                      <FaChevronLeft />
-                    </button>
+                  <div className="mt-8 flex flex-col items-center gap-3">
+                    {/* Mobile: Prev / next + page info */}
+                    <div className="flex md:hidden items-center gap-4">
+                      <button
+                        disabled={page === 1}
+                        onClick={() =>
+                          fetchCategory(cat.value, page - 1, searchQueries[cat.value] || "")
+                        }
+                        className={`px-3 py-2 rounded-lg border text-sm ${
+                          page === 1
+                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                            : "bg-white text-blue-700 border-blue-700 hover:bg-blue-700 hover:text-white"
+                        }`}
+                      >
+                        <FaChevronLeft />
+                      </button>
+                      <span className="text-sm font-medium text-gray-700">
+                        Trang {page}/{totalPages}
+                      </span>
+                      <button
+                        disabled={page === totalPages}
+                        onClick={() =>
+                          fetchCategory(cat.value, page + 1, searchQueries[cat.value] || "")
+                        }
+                        className={`px-3 py-2 rounded-lg border text-sm ${
+                          page === totalPages
+                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                            : "bg-white text-blue-700 border-blue-700 hover:bg-blue-700 hover:text-white"
+                        }`}
+                      >
+                        <FaChevronRight />
+                      </button>
+                    </div>
 
-                    {renderPageNumbers(cat.value)}
+                    {/* Desktop: full pagination */}
+                    <div className="hidden md:flex flex-wrap justify-center items-center gap-2">
+                      <button
+                        disabled={page === 1}
+                        onClick={() =>
+                          fetchCategory(cat.value, page - 1, searchQueries[cat.value] || "")
+                        }
+                        className={`px-2 py-2 rounded-lg border ${
+                          page === 1
+                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                            : "bg-white text-blue-700 border-blue-700 hover:bg-blue-700 hover:text-white"
+                        }`}
+                      >
+                        <FaChevronLeft />
+                      </button>
 
-                    <button
-                      disabled={page === totalPages}
-                      onClick={() =>
-                        fetchCategory(cat.value, page + 1, searchQueries[cat.value] || "")
-                      }
-                      className={`px-2 py-2 rounded-lg border ${
-                        page === totalPages
-                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                          : "bg-white text-blue-700 border-blue-700 hover:bg-blue-700 hover:text-white"
-                      }`}
-                    >
-                      <FaChevronRight />
-                    </button>
+                      {renderPageNumbers(cat.value)}
+
+                      <button
+                        disabled={page === totalPages}
+                        onClick={() =>
+                          fetchCategory(cat.value, page + 1, searchQueries[cat.value] || "")
+                        }
+                        className={`px-2 py-2 rounded-lg border ${
+                          page === totalPages
+                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                            : "bg-white text-blue-700 border-blue-700 hover:bg-blue-700 hover:text-white"
+                        }`}
+                      >
+                        <FaChevronRight />
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>

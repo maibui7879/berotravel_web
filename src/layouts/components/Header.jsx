@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { FaHome, FaListAlt, FaMapMarkerAlt, FaUser, FaSignOutAlt, FaIdBadge } from "react-icons/fa";
+import { FaHome, FaListAlt, FaMapMarkerAlt, FaUser, FaSignOutAlt, FaIdBadge, FaTools } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useHeader } from "../../contexts/headerContext";
 import { useAuth } from "../../contexts/authContext";
@@ -43,7 +43,6 @@ export default function Header() {
     { to: "/map", icon: <FaMapMarkerAlt />, label: "Bản đồ" },
   ];
 
-
   const forceWhite = location.pathname === "/sybau";
 
   return (
@@ -51,12 +50,13 @@ export default function Header() {
       className={`fixed top-0 left-0 w-full z-20 px-8 flex justify-between items-center shadow-lg transition-colors duration-300 z-[500]
         ${forceWhite ? "bg-white text-black" : transparent ? "bg-transparent text-white" : "bg-white text-black"}`}
     >
-    <h1 className="text-xl font-extrabold">
-      Bero
-      <span className="text-blue-200 font-semibold italic font-serif ">
-        Travel
-      </span>
-    </h1>
+      <h1 className="text-xl font-extrabold">
+        Bero
+        <span className="text-blue-200 font-semibold italic font-serif ">
+          Travel
+        </span>
+      </h1>
+
       <nav className="flex items-center relative">
         {navItems.map((item) => (
           <Link
@@ -74,7 +74,6 @@ export default function Header() {
           </Link>
         ))}
 
-        {/* Profile */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={handleProfileClick}
@@ -100,6 +99,17 @@ export default function Header() {
               >
                 <FaIdBadge /> <span>Hồ sơ</span>
               </Link>
+
+              {user?.role === "admin" && (
+                <Link
+                  to="/admin"
+                  className="flex items-center gap-2 mx-4 px-2 py-3 transition-colors duration-200 border-b border-gray-200 hover:text-blue-600"
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  <FaTools /> <span>Quản lí trang</span>
+                </Link>
+              )}
+
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 mx-4 px-2 py-3 transition-colors duration-200 text-red-500 hover:text-red-600"

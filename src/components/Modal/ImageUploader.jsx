@@ -1,9 +1,17 @@
+// ImageUploader.jsx
 import { FaPlus } from "react-icons/fa";
-import { uploadImage } from "../../../services/placeServices/cloudinaryServices";
-import { updatePlaceImages } from "../../../services/placeServices/updatePlace";
+import { uploadImage } from "../../services/placeServices/cloudinaryServices";
+import { updatePlaceImages } from "../../services/placeServices/updatePlace";
 import { useState } from "react";
 
-export default function ImageUploader({ formData, setFormData, setPlace, id, updating, setUpdating }) {
+export default function ImageUploader({
+  formData,
+  setFormData,
+  setPlace,
+  id,
+  updating,
+  setUpdating,
+}) {
   const [dragOverIndex, setDragOverIndex] = useState(null);
 
   const handleUpload = async (file, index, isMain) => {
@@ -55,13 +63,15 @@ export default function ImageUploader({ formData, setFormData, setPlace, id, upd
   };
 
   return (
-    <div className="flex flex-col">
-      <h3 className="text-base font-semibold p-2 border-b">Upload ảnh</h3>
-      <div className="flex-1 overflow-y-auto p-2 space-y-4">
+    <div className="flex flex-col rounded-2xl shadow-md border bg-white">
+      <h3 className="text-base font-semibold p-3 border-b bg-gray-50 rounded-t-2xl">
+        Upload ảnh
+      </h3>
+      <div className="flex-1 p-3 space-y-5">
         <div
-          className={`w-full h-40 rounded-lg flex items-center justify-center relative cursor-pointer border-2 ${
-            dragOverIndex === -1 ? "border-blue-500" : "border-transparent"
-          } bg-gray-200`}
+          className={`w-full h-44 rounded-xl flex items-center justify-center relative cursor-pointer border-2 ${
+            dragOverIndex === -1 ? "border-blue-500" : "border-dashed border-gray-300"
+          } bg-gray-50 hover:bg-gray-100 transition`}
           onClick={() => handleClickUpload(0, true)}
           onDragOver={(e) => handleDragOver(e, -1)}
           onDrop={(e) => handleDrop(e, 0, true)}
@@ -70,13 +80,13 @@ export default function ImageUploader({ formData, setFormData, setPlace, id, upd
             <img
               src={formData.image_url}
               alt="main"
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-full object-cover rounded-xl"
             />
           ) : (
-            <FaPlus className="text-3xl text-gray-500" />
+            <FaPlus className="text-3xl text-gray-400" />
           )}
           {updating && (
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white">
+            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white rounded-xl">
               Uploading...
             </div>
           )}
@@ -86,9 +96,9 @@ export default function ImageUploader({ formData, setFormData, setPlace, id, upd
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className={`w-full h-24 rounded-lg flex items-center justify-center relative cursor-pointer  ${
-                dragOverIndex === i ? "border-blue-500" : "border-transparent"
-              } bg-gray-200`}
+              className={`w-full h-24 rounded-xl flex items-center justify-center relative cursor-pointer border-2 ${
+                dragOverIndex === i ? "border-blue-500" : "border-dashed border-gray-300"
+              } bg-gray-50 hover:bg-gray-100 transition`}
               onClick={() => handleClickUpload(i, false)}
               onDragOver={(e) => handleDragOver(e, i)}
               onDrop={(e) => handleDrop(e, i, false)}
@@ -97,13 +107,13 @@ export default function ImageUploader({ formData, setFormData, setPlace, id, upd
                 <img
                   src={formData.img_set[i]}
                   alt={`sub-${i}`}
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-full h-full object-cover rounded-xl"
                 />
               ) : (
-                <FaPlus className="text-2xl text-gray-500" />
+                <FaPlus className="text-2xl text-gray-400" />
               )}
               {updating && (
-                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white text-sm">
+                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white text-sm rounded-xl">
                   Uploading...
                 </div>
               )}

@@ -7,7 +7,7 @@ export default function Thumbnail({ place, setShowModal }) {
   return (
     <div className="relative flex justify-center">
       <div className="absolute -top-16">
-        <div className="relative border-4 rounded-lg border-gray-200">
+        <div className="relative border-4 rounded-lg border-white">
           <img
             src={imageUrl}
             alt={place.name || "Placeholder"}

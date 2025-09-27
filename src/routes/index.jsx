@@ -10,7 +10,9 @@ import PlacePage from "../pages/PlacePage";
 import PlaceDetail from "../pages/PlaceDetail";
 import AuthPage from "../pages/AuthPage";
 import ProfilePage from "../pages/ProfilePage";
-
+import NotFound from "../pages/NotFound";
+import AdminLayout from "../layouts/AdminLayout";
+import Admin from "../pages/Admin";
 import { MapProvider } from "../contexts/mapContext";
 import { AuthProvider } from "../contexts/authContext";
 
@@ -93,6 +95,22 @@ export default function AppRoutes() {
               </DefaultLayout>
             }
           />
+          {/* Admin route */}
+          <Route
+            path="/admin"
+            element={
+              <AdminLayout>
+                <Admin />
+              </AdminLayout>
+            }
+          />
+
+          {/* NotFound route */}
+          <Route path="*" element={
+            <DefaultLayout>
+              <NotFound />
+              </DefaultLayout>} />
+          
         </Routes>
       </AuthProvider>
     </Router>

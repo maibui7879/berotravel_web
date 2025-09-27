@@ -45,7 +45,7 @@ export default function AlbumTab({ place }) {
       {/* Modal xem ảnh */}
       {modalOpen && (
         <div
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50"
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-[600]"
           onClick={closeModal}
         >
           <img
